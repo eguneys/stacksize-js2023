@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf dist && rm -f dist.zip",
-    "zip": "tar -czvf dist.tar.gz dist && mv dist.tar.gz dist.zip && sh filesize.sh",
+    "zip": "cd dist && zip -r ../dist.zip . -9 && cd .. && sh filesize.sh",
     "dist": "pnpm build && roadroller dist/assets/index.min.js -o dist/assets/index.min.js && pnpm zip",
     "dev": "vite --port=3000",
     "lint": "tsc --noEmit --watch",
-    "build": "tsc && vite build",
+    "build": "pnpm clean && tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
