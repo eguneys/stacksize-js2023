@@ -8,11 +8,16 @@
     "zip": "cd dist && zip -r ../dist.zip . -9 && cd .. && sh filesize.sh",
     "dist": "pnpm build && roadroller dist/assets/index.min.js -o dist/assets/index.min.js && pnpm zip",
     "dev": "vite --port=3000",
+    "devc": "concurrently \"pnpm dev\" \"pnpm content\"",
+    "content": "node content.js",
     "lint": "tsc --noEmit --watch",
     "build": "pnpm clean && tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
+    "aset": "link:../aset",
+    "chokidar": "^3.5.3",
+    "concurrently": "^8.2.0",
     "roadroller": "^2.1.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.0",
