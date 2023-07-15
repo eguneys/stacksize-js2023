@@ -34,11 +34,6 @@ export class Vec2 {
     }
   }
 
-  static lerp_bezier = (a: Vec2, b: Vec2, end: Vec2, t: number) => {
-    let { lerp } = Vec2
-    return lerp(lerp(a, b, t), lerp(b, end, t), t)
-  }
-
   static reflect = (v: Vec2, normal: Vec2) => {
     let dot = v.x * normal.x + v.y * normal.y
     return new Vec2(v.x - 2 * dot * normal.x,
@@ -76,30 +71,6 @@ export class Vec2 {
 
   scale(n: number) {
     return new Vec2(this.x * n, this.y * n)
-  }
-
-  add_in(v: Vec2) {
-    this.x += v.x
-    this.y += v.y
-    return this
-  }
-
-  sub_in(v: Vec2) {
-    this.x -= v.x
-    this.y -= v.y
-    return this
-  }
-
-  mul_in(v: Vec2) {
-    this.x *= v.x
-    this.y *= v.y
-    return this
-  }
-
-  scale_in(n: number) {
-    this.x *= n
-    this.y *= n
-    return this
   }
 
   set_in(v: Vec2) {
@@ -151,13 +122,9 @@ export class Vec2 {
     return Math.atan2(this.y, this.x)
   }
 
-  x: number
-  y: number
-
-  constructor(x: number, y: number) {
-    this.x = x
-    this.y = y
-  }
+  constructor(
+    public x: number, 
+    public y: number) {}
 
 }
 
@@ -174,10 +141,6 @@ export class Vec3 {
                     
   add(v: Vec3) {
     return new Vec3(this.x + v.x, this.y + v.y, this.z + this.z)
-  }
-
-  sub(v: Vec3) {
-    return new Vec3(this.x - v.x, this.y - v.y, this.z - this.z)
   }
 
   get length() {
@@ -204,17 +167,11 @@ export class Vec4 {
 
   static make = (x: number, y: number, z: number, w: number) => new Vec4(x, y, z, w)
 
-  x: number
-  y: number
-  z: number
-  w: number
-
-  constructor(x: number, y: number, z: number, w: number) {
-    this.x = x
-    this.y = y
-    this.z = z
-    this.w = w
-  }
+  constructor(
+    public x: number, 
+    public y: number, 
+    public z: number, 
+    public w: number) {}
 }
 
 export class Rect {
@@ -224,24 +181,6 @@ export class Rect {
 
   add(v: Vec2) {
     return new Rect(this.x + v.x, this.y + v.y, this.w, this.h)
-  }
-  sub(v: Vec2) {
-    return new Rect(this.x - v.x, this.y - v.y, this.w, this.h)
-  }
-
-  add_in(v: Vec2) {
-    this.x += v.x
-    this.y += v.y
-    return this
-  }
-  sub_in(v: Vec2) {
-    this.x -= v.x
-    this.y -= v.y
-    return this
-  }
-
-  equals(rhs: Rect) {
-    return Math.abs(this.x - rhs.x) < epsilon && Math.abs(this.y - rhs.y) < epsilon && Math.abs(this.w - rhs.w) < epsilon && Math.abs(this.h - rhs.h) < epsilon
   }
 
   get left() { return this.x }
@@ -372,18 +311,11 @@ export class Rect {
     return new Rect(min.x, min.y, max.x - min.x , max.y - min.y)
   }
 
-
-  x: number
-  y: number
-  w: number
-  h: number
-
-  constructor(x: number, y: number, w: number, h: number) {
-    this.x = x
-    this.y = y
-    this.w = w
-    this.h = h
-  }
+  constructor(
+    public x: number, 
+    public y: number, 
+    public w: number, 
+    public h: number) { }
 }
 
 
@@ -404,24 +336,6 @@ export class Circle {
 }
 
 export class Quad {
-
-  project(axis: Vec2) {
-    let dot = Vec2.dot(this.a, axis)
-    let min = dot,
-      max = dot
-
-    dot = Vec2.dot(this.b, axis)
-    min = dot < min ? dot : min
-    max = dot > max ? dot : max
-    dot = Vec2.dot(this.c, axis)
-    min = dot < min ? dot : min
-    max = dot > max ? dot : max
-    dot = Vec2.dot(this.d, axis)
-    min = dot < min ? dot : min
-    max = dot > max ? dot : max
-
-    return [min, max]
-  }
 
   constructor(readonly a: Vec2,
               readonly b: Vec2,
@@ -519,13 +433,9 @@ export class Line {
     return new Line(this.a.sub(v), this.b.sub(v))
   }
 
-  a: Vec2
-  b: Vec2
-
-  constructor(a: Vec2, b: Vec2) {
-    this.a = a
-    this.b = b
-  }
+  constructor(
+    public a: Vec2, 
+    public b: Vec2) {}
 }
 
 export class Mat3x2 {
@@ -542,23 +452,6 @@ export class Mat3x2 {
   }
   static create_translation_x = (x: number, y: number) => {
     return new Mat3x2(1, 0, 0, 1, x, y)
-  }
-  static create_scale = (scale: number, center_point?: Vec2) => {
-    if (center_point) {
-      let tx = center_point.x * (1 - scale)
-      let ty = center_point.y * (1 - scale)
-      return new Mat3x2(scale, 0, 0, scale, tx, ty)
-    }
-    return new Mat3x2(scale, 0, 0, scale, 0, 0)
-  }
-
-  static create_scale_xy = (x: number, y: number, center_point?: Vec2) => {
-    if (center_point) {
-      let tx = center_point.x * (1 - x)
-      let ty = center_point.y * (1 - y)
-      return new Mat3x2(x, 0, 0, y, tx, ty)
-    }
-    return new Mat3x2(x, 0, 0, y, 0, 0)
   }
   static create_scale_v = (v: Vec2, center_point?: Vec2) => {
     if (center_point) {
@@ -600,14 +493,6 @@ export class Mat3x2 {
                       a.m31 + b.m31,
                       a.m32 + b.m32)
   }
-  static sub = (a: Mat3x2, b: Mat3x2) => {
-     return new Mat3x2(a.m11 - b.m11,
-                      a.m12 - b.m12,
-                      a.m21 - b.m21,
-                      a.m22 - b.m22,
-                      a.m31 - b.m31,
-                      a.m32 - b.m32)
-  }
   static mul = (a: Mat3x2, b: Mat3x2) => {
     return new Mat3x2(a.m11 * b.m11 + a.m12 * b.m21,
                       a.m11 * b.m12 + a.m12 * b.m22,
@@ -619,17 +504,6 @@ export class Mat3x2 {
 
   mul(m: Mat3x2) { return Mat3x2.mul(this, m) }
   add(m: Mat3x2) { return Mat3x2.add(this, m) }
-  sub(m: Mat3x2) { return Mat3x2.sub(this, m) }
-  mul_in(m: Mat3x2) { 
-    let res = Mat3x2.mul(this, m)
-    this.m11 = res.m11
-    this.m12 = res.m12
-    this.m21 = res.m21
-    this.m22 = res.m22
-    this.m31 = res.m31
-    this.m32 = res.m32
-    return this
-  }
 
   get invert() {
     let { m11, m12, m21, m22, m31, m32 } = this
@@ -653,54 +527,17 @@ export class Mat3x2 {
     return Math.sqrt(m11 * m11 + m12 * m12)
   }
 
-  equals(rhs: Mat3x2) {
-    return Math.abs(this.m11 - rhs.m11) < epsilon &&
-      Math.abs(this.m12 - rhs.m12) < epsilon &&
-      Math.abs(this.m21 - rhs.m21) < epsilon &&
-      Math.abs(this.m22 - rhs.m22) < epsilon &&
-      Math.abs(this.m31 - rhs.m31) < epsilon &&
-      Math.abs(this.m32 - rhs.m32) < epsilon
-  }
-
-  m11: number
-  m12: number
-  m21: number
-  m22: number
-  m31: number
-  m32: number
-
-  constructor(m11: number,
-              m12: number,
-              m21: number,
-              m22: number,
-              m31: number,
-              m32: number) {
-                this.m11 = m11
-                this.m12 = m12
-                this.m21 = m21
-                this.m22 = m22
-                this.m31 = m31
-                this.m32 = m32
-              }
+  constructor(public m11: number,
+              public m12: number,
+              public m21: number,
+              public m22: number,
+              public m31: number,
+              public m32: number) { }
 
 
 }
 
 export class Mat4x4 {
-
-  static create_ortho = (width: number, height: number, z_near_plane: number, z_far_plane: number) => {
-    let result = Mat4x4.identity
-    result.m11 = 2 / width
-    result.m12 = result.m13 = result.m14 = 0
-    result.m22 = -2 / height
-    result.m21 = result.m23 = result.m24 = 0
-    result.m33 = 1/ (z_near_plane - z_far_plane)
-    result.m31 = result.m32 = result.m34 = 0
-    result.m41 = result.m42 = 0
-    result.m43 = z_near_plane / (z_near_plane - z_far_plane)
-    result.m44 = 1
-    return result
-  }
 
   static create_ortho_offcenter = (left: number, right: number, bottom: number, top: number, z_near_plane: number, z_far_plane: number) => {
     let result = Mat4x4.identity
@@ -713,65 +550,6 @@ export class Mat4x4 {
     result.m41 = (left + right) / (left - right)
     result.m42 = (top + bottom) / (bottom - top)
     result.m43 = z_near_plane / (z_near_plane - z_far_plane)
-    result.m44 = 1
-    return result
-  }
-  static create_perspective = (field_of_view: number, ratio: number, z_near_plane: number, z_far_plane: number) => {
-  
-    let scale_x = 1 / Math.tan(field_of_view * 0.5)
-    let scale_y = scale_x / ratio
-
-    let result = Mat4x4.identity
-    result.m11 = scale_y
-    result.m12 = result.m13 = result.m14 = 0
-    result.m22 = scale_x
-    result.m21 = result.m23 = result.m24 = 0
-    result.m31 = result.m32 = 0
-    result.m33 = z_far_plane / (z_near_plane - z_far_plane)
-    result.m34 = -1
-    result.m41 = result.m42 = result.m44 = 0
-    result.m43 = z_near_plane * z_far_plane / (z_near_plane - z_far_plane)
-    return result
-  }
-
-  static create_translation = (x: number, y: number, z: number) => {
-    let result = Mat4x4.identity
-    result.m41 = x
-    result.m42 = y
-    result.m43 = z
-    return result
-  }
-
-  static create_scale = (x: number, y: number, z: number) => {
-    let result = Mat4x4.identity
-    result.m11 = x
-    result.m22 = y
-    result.m33 = z
-    return result
-  }
-
-  static create_lookat = (position: Vec3, target: Vec3, up: Vec3) => {
-  
-    let zaxis = position.sub(target).normal
-    let xaxis = Vec3.cross(up, zaxis).normal
-    let yaxis = Vec3.cross(zaxis, xaxis)
-
-    let result = Mat4x4.identity
-    result.m11 = xaxis.x
-    result.m12 = yaxis.x
-    result.m13 = zaxis.x
-    result.m14 = 0
-    result.m21 = xaxis.y
-    result.m22 = yaxis.y
-    result.m23 = zaxis.y
-    result.m24 = 0
-    result.m31 = xaxis.z
-    result.m32 = yaxis.z
-    result.m33 = zaxis.z
-    result.m34 = 0
-    result.m41 = -Vec3.dot(xaxis, position)
-    result.m42 = -Vec3.dot(yaxis, position)
-    result.m43 = -Vec3.dot(zaxis, position)
     result.m44 = 1
     return result
   }
@@ -812,69 +590,25 @@ export class Mat4x4 {
     return m
   }
 
-  m11: number
-  m12: number
-  m13: number
-  m14: number
+  constructor(public m11: number,
+              public m12: number,
+              public m13: number,
+              public m14: number,
 
-  m21: number
-  m22: number
-  m23: number
-  m24: number
+              public m21: number,
+              public m22: number,
+              public m23: number,
+              public m24: number,
 
-  m31: number
-  m32: number
-  m33: number
-  m34: number
+              public m31: number,
+              public m32: number,
+              public m33: number,
+              public m34: number,
 
-  m41: number
-  m42: number
-  m43: number
-  m44: number
-
-
-  constructor(m11: number,
-              m12: number,
-              m13: number,
-              m14: number,
-
-              m21: number,
-              m22: number,
-              m23: number,
-              m24: number,
-
-              m31: number,
-              m32: number,
-              m33: number,
-              m34: number,
-
-              m41: number,
-              m42: number,
-              m43: number,
-              m44: number) {
-
-                this.m11 = m11
-                this.m12 = m12
-                this.m13 = m13
-                this.m14 = m14
-
-                this.m21 = m21
-                this.m22 = m22
-                this.m23 = m23
-                this.m24 = m24
-
-
-                this.m31 = m31
-                this.m32 = m32
-                this.m33 = m33
-                this.m34 = m34
-
-
-                this.m41 = m41
-                this.m42 = m42
-                this.m43 = m43
-                this.m44 = m44
-              }
+              public m41: number,
+              public m42: number,
+              public m43: number,
+              public m44: number) {}
 
 
 

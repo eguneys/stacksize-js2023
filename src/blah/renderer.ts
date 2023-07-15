@@ -241,6 +241,7 @@ export class WebGL_Mesh extends Mesh {
       let component_size = 0
       let components = 1
 
+      /*
       if (attribute.type === VertexType.Float) {
         type = App.renderer.gl.FLOAT
         component_size = 4
@@ -252,6 +253,7 @@ export class WebGL_Mesh extends Mesh {
         component_size = 4
         components = 2
       }
+     */
 
       if (attribute.type === VertexType.Float3) {
         type = App.renderer.gl.FLOAT
@@ -259,6 +261,7 @@ export class WebGL_Mesh extends Mesh {
         components = 3
       }
 
+      /*
 
       if (attribute.type === VertexType.Float4) {
         type = App.renderer.gl.FLOAT
@@ -272,6 +275,7 @@ export class WebGL_Mesh extends Mesh {
         component_size = 1
         components = 4
       }
+     */
 
       let location = attribute.index
       App.renderer.gl.enableVertexAttribArray(location)
@@ -413,7 +417,7 @@ export class WebGL_Texture extends Texture {
       this.m_gl_format = App.renderer.gl.RGBA
       this.m_gl_type = App.renderer.gl.UNSIGNED_BYTE
     } else {
-      Log.error(`Unsupported Texture format ${format}`)
+      Log.error(`UTf${format}`)
     }
 
 
@@ -465,13 +469,13 @@ export class Renderer {
     let context = App.platform.gl_context_create()
 
     if (context === null) {
-      Log.error("Failed to create WebGL Context")
+      Log.error("FtcWGLC")
       return false
     }
 
     this.gl = context
 
-    Log.info(`WebGL2`)
+    Log.info(`WGL2`)
 
 
     this.gl.pixelStorei(this.gl.PACK_ALIGNMENT, 1)
@@ -533,26 +537,35 @@ export class Renderer {
           App.renderer.gl.uniform1iv(location, texture_ids)
       }
 
+
+      /*
       if (uniform.type === UniformType.Float) {
         App.renderer.gl.uniform1fv(location, data.slice(i_data, i_data + 1 * uniform.array_length))
         i_data += 1 * uniform.array_length
-      } else if (uniform.type === UniformType.Float2) {
+      } 
+      if (uniform.type === UniformType.Float2) {
         App.renderer.gl.uniform2fv(location, data.slice(i_data, i_data + 2 * uniform.array_length))
         i_data += 2 * uniform.array_length
-      } else if (uniform.type === UniformType.Float3) {
+      } 
+     */
+      if (uniform.type === UniformType.Float3) {
         App.renderer.gl.uniform3fv(location, data.slice(i_data, i_data + 3 * uniform.array_length))
         i_data += 3 * uniform.array_length
-      } else if (uniform.type === UniformType.Float4) {
+      } 
+      /*
+      if (uniform.type === UniformType.Float4) {
         App.renderer.gl.uniform4fv(location, data.slice(i_data, i_data + 4 * uniform.array_length))
         i_data += 4 * uniform.array_length
-      } else if (uniform.type === UniformType.Mat3x2) {
+      } 
+     */
+      if (uniform.type === UniformType.Mat3x2) {
         App.renderer.gl.uniformMatrix3fv(location, false, data.slice(i_data, i_data + 9 * uniform.array_length))
         i_data += 9 * uniform.array_length
-      } else if (uniform.type === UniformType.Mat4x4) {
+      } 
+      if (uniform.type === UniformType.Mat4x4) {
         App.renderer.gl.uniformMatrix4fv(location, false, data.slice(i_data, i_data + 16 * uniform.array_length))
         i_data += 16 * uniform.array_length
       }
-
     })
 
 
@@ -560,16 +573,18 @@ export class Renderer {
     // blend
     {
 
+      /*
       let color_op = gl_get_blend_func(pass.blend.color_op)
       let alpha_op = gl_get_blend_func(pass.blend.alpha_op)
       let color_src = gl_get_blend_factor(pass.blend.color_src)
       let color_dst = gl_get_blend_factor(pass.blend.color_dst)
       let alpha_src = gl_get_blend_factor(pass.blend.alpha_src)
       let alpha_dst = gl_get_blend_factor(pass.blend.alpha_dst)
+     */
 
       this.gl.enable(this.gl.BLEND)
-      this.gl.blendEquationSeparate(color_op, alpha_op)
-      this.gl.blendFuncSeparate(color_src, color_dst, alpha_src, alpha_dst)
+      //this.gl.blendEquationSeparate(color_op, alpha_op)
+      //this.gl.blendFuncSeparate(color_src, color_dst, alpha_src, alpha_dst)
     }
 
     // depth
@@ -592,6 +607,7 @@ export class Renderer {
     }
 
     // scissor
+    if (false)
     {
       if (!pass.has_scissor) {
         this.gl.disable(this.gl.SCISSOR_TEST)
@@ -626,11 +642,13 @@ export class Renderer {
                                       index_size * pass.index_start,
                                       pass.instance_count)
       } else {
+        /*
         this.gl.drawElements(
           this.gl.TRIANGLES,
           pass.index_count,
           index_format,
           index_size * pass.index_start)
+         */
       }
     }
 
@@ -661,14 +679,6 @@ export class Renderer {
 
 const gl_get_blend_func = (operation: BlendOp) => {
   switch (operation) {
-    case BlendOp.Add:
-      return App.renderer.gl.FUNC_ADD
-    case BlendOp.Subtract:
-      return App.renderer.gl.FUNC_SUBTRACT
-    case BlendOp.Min:
-      return App.renderer.gl.MIN
-    case BlendOp.Max:
-      return App.renderer.gl.MAX
     default:
       return App.renderer.gl.FUNC_ADD
   }
@@ -677,34 +687,10 @@ const gl_get_blend_func = (operation: BlendOp) => {
 
 const gl_get_blend_factor = (factor: BlendFactor) => {
   switch (factor) {
-    case BlendFactor.Zero:
-      return App.renderer.gl.ZERO
     case BlendFactor.One:
       return App.renderer.gl.ONE
-    case BlendFactor.SrcColor:
-      return App.renderer.gl.SRC_COLOR
-    case BlendFactor.OneMinusSrcColor:
-      return App.renderer.gl.ONE_MINUS_SRC_COLOR
-    case BlendFactor.DstColor:
-      return App.renderer.gl.DST_COLOR
-    case BlendFactor.OneMinusDstColor:
-      return App.renderer.gl.ONE_MINUS_DST_COLOR
-    case BlendFactor.SrcAlpha:
-      return App.renderer.gl.SRC_ALPHA
     case BlendFactor.OneMinusSrcAlpha:
       return App.renderer.gl.ONE_MINUS_SRC_ALPHA
-    case BlendFactor.DstAlpha:
-      return App.renderer.gl.DST_ALPHA
-    case BlendFactor.OneMinusDstAlpha:
-      return App.renderer.gl.ONE_MINUS_DST_ALPHA
-    case BlendFactor.ConstantColor:
-      return App.renderer.gl.CONSTANT_COLOR
-    case BlendFactor.ConstantAlpha:
-      return App.renderer.gl.CONSTANT_ALPHA
-    case BlendFactor.OneMinusConstantColor:
-      return App.renderer.gl.ONE_MINUS_CONSTANT_COLOR
-    case BlendFactor.OneMinusConstantAlpha:
-      return App.renderer.gl.ONE_MINUS_CONSTANT_ALPHA
     default:
       return App.renderer.gl.ZERO
   }

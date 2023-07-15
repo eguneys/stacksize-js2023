@@ -133,10 +133,11 @@ export class Batch {
     }
   }
 
+  /*
   set_sampler(sampler: TextureSampler) {
-  
     console.log(sampler)
   }
+ */
 
   render(target: Target = App.backbuffer) {
     
@@ -249,8 +250,6 @@ export class Batch {
     this.m_batch_insert = 0
   }
 
-  line(from: Vec2, to: Vec2, t: number, color: Color) {}
-
   rect(rect: Rect, color: Color) {
     this.PUSH_QUAD(
       rect.x, rect.y,
@@ -261,76 +260,6 @@ export class Batch {
       color, color, color, color,
       0, 0, 255)
   }
-
-  rect_line(rect: Rect, t: number, color: Color) {
-    if (t >= rect.w || t >= rect.h) {
-      this.rect(rect, color)
-    } else {
-      this.PUSH_QUAD(
-        rect.x, rect.y,
-        rect.x + rect.w - t, rect.y,
-        rect.x + rect.w - t, rect.y + t,
-        rect.x, rect.y + t,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        color, color, color, color,
-        0, 0, 255)
-
-      this.PUSH_QUAD(
-        rect.x + rect.w - t, rect.y,
-        rect.x + rect.w, rect.y,
-        rect.x + rect.w, rect.y + rect.h - t,
-        rect.x + rect.w - t, rect.y + rect.h - t,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        color, color, color, color,
-        0, 0, 255)
-
-      this.PUSH_QUAD(
-        rect.x + t, rect.y + rect.h - t,
-        rect.x + rect.w, rect.y + rect.h - t,
-        rect.x + rect.w, rect.y + rect.h,
-        rect.x, rect.y + rect.h,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        color, color, color, color,
-        0, 0, 255)
-
-      this.PUSH_QUAD(
-        rect.x, rect.y + t,
-        rect.x + t, rect.y + t,
-        rect.x + t, rect.y + rect.h - t,
-        rect.x, rect.y + rect.h,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        color, color, color, color,
-        0, 0, 255)
-    }
-  }
-
-  circle(center: Vec2, radius: number, steps: number, color: Color) {}
-  circle_line(center: Vec2, radius: number, t: number, steps: number, color: Color) {}
-
-
-  quad(pos0: Vec2, pos1: Vec2, pos2: Vec2, pos3: Vec2, color: Color) {}
-  quad_line(a: Vec2, b: Vec2, c: Vec2, d: Vec2, t: number, color: Color) {}
-
-
-  tex(texture: Texture, pos: Vec2 = Vec2.zero, color: Color = Color.white) {
-    this.set_texture(texture)
-
-    let w = texture.width
-    let h = texture.height
-
-    let { m_tex_mult, m_tex_wash } = this
-
-    this.PUSH_QUAD(
-      pos.x, pos.y, pos.x + w, pos.y, pos.x + w, pos.y + h, pos.x, pos.y + h,
-      0, 0, 1, 0, 1, 1, 0, 1,
-      color, color, color, color,
-      m_tex_mult, m_tex_wash, 0)
-  }
-  tex_o(texture: Texture, position: Vec2, origin: Vec2, scale: Vec2, rotation: number, color: Color) {
-  }
-  tex_c(texture: Texture, clip: Rect, position: Vec2, origin: Vec2, scale: Vec2, rotation: number, color: Color) {
-  }
-
 
   stex(sub: Subtexture, pos: Vec2 = Vec2.zero, color: Color = Color.white) {
 
@@ -349,83 +278,6 @@ export class Batch {
       color, color, color, color,
       m_tex_mult, m_tex_wash, 0)
   }
-  stex_o(sub: Subtexture, pos: Vec2, origin: Vec2, scale: Vec2, rotation: number, color: Color) {
-
-    let { m_tex_mult, m_tex_wash } = this
-    this.push_matrix(Mat3x2.create_transform(pos, origin, scale, rotation))
-    this.set_texture(sub.texture)
-
-    this.PUSH_QUAD(
-      sub.draw_coords[0].x, sub.draw_coords[0].y,
-      sub.draw_coords[1].x, sub.draw_coords[1].y,
-      sub.draw_coords[2].x, sub.draw_coords[2].y,
-      sub.draw_coords[3].x, sub.draw_coords[3].y,
-      sub.tex_coords[0].x, sub.tex_coords[0].y,
-      sub.tex_coords[1].x, sub.tex_coords[1].y,
-      sub.tex_coords[2].x, sub.tex_coords[2].y,
-      sub.tex_coords[3].x, sub.tex_coords[3].y,
-      color, color, color, color,
-      m_tex_mult, m_tex_wash, 0)
-
-      this.pop_matrix()
-  }
-  stex_c(subtexture: Subtexture, clip: Rect, position: Vec2, origin: Vec2, scale: Vec2, rotation: number, color: Color) {
-  }
-
-
-  /*
-  str(font: SpriteFont, text: string, pos: Vec2, color: Color) {
-    this.str_j(font, text, pos, Vec2.zero, font.size, color)
-  }
-  str_j(font: SpriteFont, text: string, pos: Vec2, justify: Vec2, size: number, color: Color) {
-  
-    this.push_matrix(
-      Mat3x2.create_scale(size / font.size).mul(Mat3x2.create_translation(pos)))
-
-
-    let offset: Vec2 = Vec2.make(0, font.ascent + font.descent)
-    if (justify.x !== 0) {
-      offset.x -= font.width_of_line(text) * justify.x
-    }
-    if (justify.y !== 0) {
-      offset.y -= font.height_of(text) * justify.y
-    }
-
-    let last = 0
-    let i = 0
-
-    for (let char of text) {
-
-      if (char === '\n') {
-        offset.x = 0
-        offset.y += font.line_height
-
-        if (justify.x !== 0) {
-          offset.x -= font.width_of_line(text, i + 1) * justify.x
-        }
-
-        last = 0
-      } else {
-        let ch = font.get_character(char.charCodeAt(0))
-        if (ch.subtexture.texture) {
-          let at = offset.add(ch.offset)
-          if (last) {
-            at.x += font.get_kerning(last, char.charCodeAt(0))
-          }
-          this.stex(ch.subtexture, at, color)
-        }
-
-        offset.x += ch.advance
-        last = char.charCodeAt(0)
-      }
-
-      i++;
-    }
-
-
-    this.pop_matrix()
-  }
- */
 
   INSERT_BATCH() {
     this.m_batches.push(this.m_batch.clone)

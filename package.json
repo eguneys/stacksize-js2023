@@ -15,12 +15,14 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "aset": "link:../aset",
+    "aset": "link:..\\aset",
     "chokidar": "^3.5.3",
     "concurrently": "^8.2.0",
     "roadroller": "^2.1.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.0",
+    "rollup-plugin-sizes": "^1.0.5",
+    "rollup-plugin-visualizer": "^5.9.2",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.4",
     "vite-plugin-glsl": "^1.1.2"
   }
 }

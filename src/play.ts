@@ -21,7 +21,6 @@ export abstract class Play {
   _render_order: number = 0
 
   visible: boolean = true
-  g_position!: Vec2
   position!: Vec2
   rotation!: number
   origin: Vec2 = Vec2.zero
@@ -50,7 +49,6 @@ export abstract class Play {
   _data: any
 
   _set_data(position: Vec2, data: any): this { 
-    this.g_position = Vec2.zero
     this.position = position
     this.rotation = 0
     this._data = data 
@@ -85,16 +83,7 @@ export abstract class Play {
     return this.visible
   }
 
-  g_scissor?: Rect
-
-  get p_scissor(): Rect | undefined {
-    if (this.parent) {
-      return this.g_scissor || this.parent.p_scissor
-    }
-    return this.g_scissor
-
-  }
-
+  /*
   send_front() {
     if (this.parent) {
       this.parent.objects.splice(this.parent.objects.indexOf(this), 1)
@@ -108,6 +97,7 @@ export abstract class Play {
       this.parent.objects.unshift(this)
     }
   }
+ */
 
   _add_object(child: Play) {
     this.objects.push(child)
@@ -133,14 +123,6 @@ export abstract class Play {
   }
 
   _tween?: Tween
-  tween_single(_ref: Tween | undefined, values: Array<number>, f: (v: number) => void, duration: Array<number> | number, loop: number = 0, on_complete?: () => void) {
-    if (_ref) {
-      this.cancel(_ref)
-    }
-    return this.tween(values, f, duration, loop, on_complete)
-  }
-
-
 
   make<T extends Play>(ctor: { new(...args: any[]): T}, position: Vec2, data: any) {
     let res = this._make(ctor, position, data)
@@ -206,7 +188,6 @@ export abstract class Play {
   _update() {}
   _draw(batch: Batch) {
     batch.push_matrix(Mat3x2.create_transform(this.position, this.origin, this.scale, this.rotation))
-    this.g_position = Vec2.transform(Vec2.zero, batch.m_matrix)
     this._draw_children(batch)
     batch.pop_matrix()
   }
