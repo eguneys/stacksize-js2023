@@ -2,8 +2,9 @@ import { Vec2 } from './vec2'
 
 export default class Graphics {
 
-  _queues: any
-  _squeues: any
+  _queues:{[color:string]:[any, number, number, number, number, number, ...any][]}
+  _squeues:{[color:string]:[any, number, number, number, number, number, ...any][]}
+
 
   constructor(readonly width: number,
     readonly height: number,
@@ -63,7 +64,7 @@ export default class Graphics {
     this.ctx.fill()
   }
 
-  queue(color: string, shadow: boolean, ...rest) {
+  queue(color: string, shadow: boolean, ...rest: [any, number, number, number, number, number, ...any[]]) {
     let queues = shadow ? this._squeues : this._queues
     if (!queues[color]) {
       queues[color] = []
@@ -92,7 +93,7 @@ export default class Graphics {
       this.ctx.strokeStyle = color
 
       let _queue = this._squeues[color]
-      _queue.forEach((_: any[]) => draw_ctx(this.ctx, ..._))
+      _queue.forEach(_ => draw_ctx(this.ctx, ..._))
     })
 
 
@@ -102,7 +103,7 @@ export default class Graphics {
       this.ctx.strokeStyle = color
 
       let _queue = this._queues[color]
-      _queue.forEach((_: any[]) => draw_ctx(this.ctx, ..._))
+      _queue.forEach(_ => draw_ctx(this.ctx, ..._))
     })
 
     this._squeues = {}

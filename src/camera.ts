@@ -1,15 +1,24 @@
 import { ticks } from './shared'
 import { ti, completed, read, update, tween } from './anim'
 import { arr_shuffle } from './util'
+import { Batcher } from './webgl'
+
+type Tween = any
 
 export default class Camera {
 
-  constructor(readonly g: Graphics, readonly r: number) { 
+  x: number
+  y: number
+
+  _t?: Tween
+  _t2?: Tween
+
+  constructor(readonly g: Batcher, readonly r: number) { 
     this.x = 0
     this.y = 0
   }
 
-  shake(arr: Array<number>, arr2: Array<number>, radius) {
+  shake(arr: Array<number>, arr2: Array<number>, radius: number) {
     this._t = tween([1.2, 0.8, 1.0, ...arr, 0.5, 0.2, 0].map(_ => _ * radius), [ticks.five, ticks.three, ticks.one * 2])
     this._t2 = tween([1.2, 0.8, 1.0, ...arr2, 0.5, 0.2, 0].map(_ => _ * radius), [ticks.five, ticks.three, ticks.one * 2])
   }
@@ -35,7 +44,7 @@ export default class Camera {
     }
   }
     
-  fr(color, _r, _x, _y, _w, _h, hollow, shadow_color = 0x000000) {
+  fr(color: number, _r: number, _x: number, _y: number, _w: number, _h: number, hollow: number, shadow_color = 0x000000) {
     let { r, x, y } = this
     _x += x
     _y += y
@@ -43,7 +52,7 @@ export default class Camera {
     this.g.fr(color, _r, r * _x, r * _y, r * _w, r * _h, hollow)
   }
 
-  fc(color, _x, _y, _r, hollow, shadow_color = 0x000000, rotation = 0) {
+  fc(color: number, _x: number, _y: number, _r: number, hollow: number, shadow_color = 0x000000, rotation = 0) {
     let { r, x, y } = this
     _x += x
     _y += y
@@ -51,7 +60,7 @@ export default class Camera {
     this.g.fc(color, r * _x, r * _y, r * _r, hollow, rotation)
   }
 
-  line(color, a, _x, _y, _r, stroke = 10) {
+  line(color: number, a: number, _x: number, _y: number, _r: number, stroke = 10) {
     let { r, x, y } = this
 
     _x += x

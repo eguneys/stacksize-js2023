@@ -4,23 +4,23 @@ import { song1, over } from './sounds'
 
 let data = [song1, over]
 
-let audioCtx
+let audioCtx: AudioContext
 
-let sfx
+let sfx: any
 
-export function generate(cb) {
-  initAudio(data, _ => {
+export function generate(cb: any) {
+  initAudio(data, (_: any) => {
     sfx = VSound(_); 
     cb()
   })
 }
 
 /* https://github.com/Rybar/JS13K2022-Boilerplate/blob/main/src/js/game.js */
-function initAudio(sndData, cb){
+function initAudio(sndData: any[], cb: any){
   audioCtx = new AudioContext()
 
   let totalSounds = sndData.length;
-  let sounds = []
+  let sounds: any[] = []
   let soundsReady = 0;
   sndData.forEach(function(o, i){
     var sndGenerator = new MusicPlayer();
@@ -45,7 +45,7 @@ function initAudio(sndData, cb){
   })
 }
 
-function VSound(_sounds) {
+function VSound(_sounds: any) {
 
 
   let audioMaster = audioCtx.createGain();
@@ -62,7 +62,7 @@ function VSound(_sounds) {
 
 
 
-	function playSound(buffer, playbackRate = 1, pan = 0, volume = .2, loop = false) {
+	function playSound(buffer: any, playbackRate = 1, pan = 0, volume = .2, loop = false) {
 
 		var source = audioCtx.createBufferSource();
 		var gainNode = audioCtx.createGain();
@@ -85,7 +85,7 @@ function VSound(_sounds) {
 	}
 
 
-	return (_, loop = false) => {
+	return (_: any, loop = false) => {
     return playSound(_sounds[_], 1, 0, .1, loop)
 	}
 }
