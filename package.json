@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf dist && rm -f dist.zip",
-    "zip": "zip -r dist.zip -j dist -9 && echo `ls -lh dist.zip | cut -f5 -d ' '` bytes.",
+    "zip": "tar -czvf dist.tar.gz dist && mv dist.tar.gz dist.zip && sh filesize.sh",
     "dist": "pnpm build && roadroller dist/assets/index.min.js -o dist/assets/index.min.js && pnpm zip",
     "dev": "vite --port=3000",
     "lint": "tsc --noEmit --watch",
