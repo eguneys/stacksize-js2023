@@ -1,0 +1,25 @@
+import { Vec2 } from './vec2'
+import { 
+  Play,
+  PlayMakes,
+  AllPlays,
+  Context
+} from './play_base'
+
+import { Anim } from './anim'
+
+
+export default function MakePlay(ctx: Context) {
+
+  let p = new AllPlays(ctx).init()
+
+  p.make(Anim, {
+    position: Vec2.zero,
+    rotation: 0,
+    size: Vec2.unit,
+    name: 'rank'
+  })
+
+  return p
+
+}
