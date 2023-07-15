@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { ImageSave, Rect, Packer, aseprite } from 'aset'
+import jspngopt from 'jspngopt'
 
 export default async function pack() {
 
@@ -34,7 +35,10 @@ export default async function pack() {
     sprites
   }
 
-  fs.writeFileSync('./content/out_0.png', packer.pages[0].png_buffer)
+  let opt = new jspngopt.Optimizer()
+  let opt_png = opt.bufferSync(packer.pages[0].png_buffer)
+
+  fs.writeFileSync('./content/out_0.png', opt_png)
   fs.writeFileSync('./content/out_0.json', JSON.stringify(res))
 
   console.log('content written.')

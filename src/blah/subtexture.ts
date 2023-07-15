@@ -52,23 +52,4 @@ export class Subtexture {
       tex_coords[3].y = (source.y + source.h) * uvy
     }
   }
-
-  crop_info(clip: Rect) {
-    let { source, frame } = this
-
-    let dest_source = (clip.add(source.top_left).add(frame.top_left)).overlaps_rect(source)
-
-    let dest_frame = Rect.make(Math.min(0, frame.x, + clip.x),
-                               Math.min(0, frame.y + clip.y),
-                               clip.w,
-                               clip.h)
-
-    return [dest_source, dest_frame]
-  }
-
-  crop(clip: Rect) {
-    let { texture } = this
-    let [dst_source, dst_frame] = this.crop_info(clip)
-    return new Subtexture(texture, dst_source, dst_frame)
-  }
 }

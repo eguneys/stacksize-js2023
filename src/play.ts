@@ -26,22 +26,6 @@ export abstract class Play {
   origin: Vec2 = Vec2.zero
   scale: Vec2 = Vec2.one
 
-
-  coroutines: Array<Coroutine> = []
-
-  routine(coroutine: Coroutine) {
-    this.coroutines.push(coroutine)
-  }
-
-  *wait_for(ms: number) {
-    let n = 0
-    while(n < ms) {
-      n+= Time.delta
-      yield
-    }
-  }
-
-
   get input_priority() {
     return this._render_order
   }
@@ -75,29 +59,6 @@ export abstract class Play {
     }
     return this.position
   }
-
-  get p_visible(): boolean {
-    if (this.parent) {
-      return this.parent.p_visible && this.visible
-    }
-    return this.visible
-  }
-
-  /*
-  send_front() {
-    if (this.parent) {
-      this.parent.objects.splice(this.parent.objects.indexOf(this), 1)
-      this.parent.objects.push(this)
-    }
-  }
-
-  send_back() {
-    if (this.parent) {
-      this.parent.objects.splice(this.parent.objects.indexOf(this), 1)
-      this.parent.objects.unshift(this)
-    }
-  }
- */
 
   _add_object(child: Play) {
     this.objects.push(child)
@@ -140,11 +101,6 @@ export abstract class Play {
   }
 
   update() {
-
-    this.coroutines = this.coroutines.filter(_ => {
-      let res = _.next()
-      return !res.done
-    })
 
     this.objects.forEach(_ => _.update())
 

@@ -1,8 +1,10 @@
 export const epsilon = 0.000001
+/*
 export const b0001 = 1
 export const b0010 = 4
 export const b0100 = 8
 export const b1000 = 16
+*/
 
 
 export class Vec2 {
@@ -14,16 +16,21 @@ export class Vec2 {
   static transform = (v: Vec2, m: Mat3x2) => 
   new Vec2((v.x * m.m11) + (v.y * m.m21) + m.m31,
            (v.x * m.m12) + (v.y * m.m22) + m.m32)
+           /*
   static transform_normal = (v: Vec2, m: Mat3x2) =>
   new Vec2((v.x * m.m11) + (v.y * m.m21),
            (v.x * m.m12) + (v.y * m.m22))
+          */
   static from_angle = (radians: number, length = 1) =>
   new Vec2(Math.cos(radians) * length,
            Math.sin(radians) * length)
+           /*
   static approach = (value: Vec2, target: Vec2, delta: number) =>
   ((value.sub(target)).length_squared <= delta * delta) ? target : 
     value.add(target.sub(value).normal).scale(delta)
+   */
 
+  /*
   static lerp = (a: Vec2, b: Vec2, t: number) => {
     if (t === 0) {
       return a
@@ -33,22 +40,31 @@ export class Vec2 {
       return a.add(b.sub(a).scale(t))
     }
   }
+ */
 
+  /*
   static reflect = (v: Vec2, normal: Vec2) => {
     let dot = v.x * normal.x + v.y * normal.y
     return new Vec2(v.x - 2 * dot * normal.x,
                     v.y - 2 * dot * normal.y)
   }
+ */
+/*
   static min = (a: Vec2, b: Vec2) => new Vec2(Math.min(a.x, b.x), Math.min(a.y, b.y))
   static max = (a: Vec2, b: Vec2) => new Vec2(Math.max(a.x, b.x), Math.max(a.y, b.y))
+ */
 
 
+  /*
   static get unit_x() { return Vec2.make(1, 0) }
   static get unit_y() { return Vec2.make(0, 1) }
+ */
+/*
   static get right() { return Vec2.make(1, 0) }
   static get up() { return Vec2.make(0, -1) }
   static get down() { return Vec2.make(0, 1) }
   static get left() { return Vec2.make(-1, 0) }
+ */
   static get zero() { return Vec2.make(0, 0) }
   static get one() { return Vec2.make(1, 1) }
 
@@ -78,9 +94,11 @@ export class Vec2 {
     this.y = v.y
   }
 
+  /*
   equals(v: Vec2) {
     return Math.abs(this.x - v.x) < epsilon && Math.abs(this.y - v.y) < epsilon
   }
+ */
 
   distance(v: Vec2) {
     return this.sub(v).length
@@ -90,9 +108,11 @@ export class Vec2 {
     return new Vec2(-this.x, -this.y)
   }
 
+  /*
   get abs() {
     return new Vec2(Math.abs(this.x), Math.abs(this.y))
   }
+ */
 
   get normal() {
     let len = Math.sqrt(this.x * this.x + this.y * this.y)
@@ -102,16 +122,20 @@ export class Vec2 {
     return new Vec2(this.x / len, this.y / len)
   }
 
+  /*
   get turn_right() {
     return new Vec2(-this.y, this.x)
   }
+ */
 
+  /*
   get turn_left() {
     return new Vec2(this.y, -this.x)
   }
+ */
 
   get length() {
-    return Math.sqrt(this.x * this.x + this.y * this.y)
+    return Math.sqrt(this.length_squared)
   }
 
   get length_squared() {
@@ -129,6 +153,7 @@ export class Vec2 {
 }
 
 
+/*
 export class Vec3 {
 
 
@@ -173,6 +198,7 @@ export class Vec4 {
     public z: number, 
     public w: number) {}
 }
+*/
 
 export class Rect {
 
@@ -190,6 +216,7 @@ export class Rect {
   get center() { return new Vec2(this.center_x, this.center_y) }
   get center_x() { return this.x + this.w / 2 }
   get center_y() { return this.y + this.h / 2 }
+  /*
   get top_left() { return new Vec2(this.x, this.y) }
   get top_right() { return new Vec2(this.x + this.w, this.y) }
   get bottom_right() { return new Vec2(this.w + this.w, this.y + this.h) }
@@ -198,15 +225,20 @@ export class Rect {
   get center_right() { return new Vec2(this.x + this.w, this.center_y) }
   get middle_top() { return new Vec2(this.center_x, this.y) }
   get middle_bottom() { return new Vec2(this.center_x, this.y + this.h) }
+ */
+/*
   get left_line() { return Line.make_x(this.left, this.top, this.left, this.bottom) }
+
   get right_line() { return Line.make_x(this.right, this.top, this.right, this.bottom) }
   get top_line() { return Line.make_x(this.left, this.top, this.right, this.top) }
   get bottom_line() { return Line.make_x(this.left, this.bottom, this.right, this.bottom) }
 
-
+ */
+  /*
   contains_point(pt: Vec2) {
     return pt.x >= this.x && pt.x < this.x + this.w && pt.y >= this.y && pt.y < this.y + this.h
   }
+ */
 
   contains_rect(r: Rect) {
     return r.x >= this.x && r.x + r.w < this.x + this.w && r.y >= this.y && r.y + r.h < this.y + this.h
@@ -231,18 +263,27 @@ export class Rect {
     return result
   }
 
+  /*
   intersects(l: Line) {
     return l.intersects_rect(this)
   }
+ */
+/*
   intersects_at(l: Line, out_intersection_point: Vec2) {
     return l.intersects_rect(this, out_intersection_point)
   }
+ */
+  /*
   intersects_from_to(line_from: Vec2, line_to: Vec2) {
     return this.intersects(new Line(line_from, line_to))
   }
+ */
+/*
   intersects_from_to_at(line_from: Vec2, line_to: Vec2, out_intersection_point: Vec2) {
     return this.intersects_at(new Line(line_from, line_to), out_intersection_point)
   }
+ */
+/*
   intersection_point(line: Line) {
     let ret = new Vec2(0, 0)
     if (line.intersects_rect(this, ret)) {
@@ -250,7 +291,9 @@ export class Rect {
     }
     return Vec2.zero
   }
+ */
 
+  /*
   intersection_point_from_to(line_from: Vec2, line_to: Vec2) {
     let ret = new Vec2(0, 0)
     if (new Line(line_from, line_to).intersects_rect(this, ret)) {
@@ -258,28 +301,35 @@ export class Rect {
     }
     return Vec2.zero 
   }
+ */
 
 
-
+/*
   scale(s: number) {
     return new Rect(this.x * s, this.y * s, this.w * s, this.h * s)
   }
+ */
+  /*
   scale_xy(sx: number, sy: number) {
     return new Rect(this.x * sx, this.y * sy, this.w * sx, this.h * sy)
   }
+ */
   inflate(amount: number) {
     return new Rect(this.x - amount, this.y - amount, this.w + amount * 2, this.h + amount * 2)
   }
+  /*
   inflate_xy(amount_x: number, amount_y: number) {
     return new Rect(this.x - amount_x, this.y - amount_y, this.w + amount_x * 2, this.h + amount_y * 2)
   }
 
+ */
 
   // Rect Sectors:
   //		0101  0100  0110
   //		0001  0000  0010
   //		1001  1000  1010
   //	0000 = inside rectangle, all others refer to sectors relative to the rectangle
+/*
   get_sector(pt: Vec2) {
 
     let result = 0
@@ -295,8 +345,10 @@ export class Rect {
     }
     return result
   }
+ */
 
 
+  /*
   static transform = (rect: Rect, matrix: Mat3x2) => {
     return new Rect(
       (rect.x * matrix.m11) + (rect.y * matrix.m21) + matrix.m31,
@@ -304,12 +356,15 @@ export class Rect {
       (rect.w * matrix.m11) + (rect.h * matrix.m21),
       (rect.w * matrix.m12) + (rect.h * matrix.m22))
   }
+ */
 
+  /*
   static from_points = (from: Vec2, to: Vec2) => {
     let min = Vec2.min(from, to),
       max = Vec2.max(from, to)
     return new Rect(min.x, min.y, max.x - min.x , max.y - min.y)
   }
+ */
 
   constructor(
     public x: number, 
@@ -321,9 +376,12 @@ export class Rect {
 
 export class Circle {
 
+  /*
   static make_x = (x: number, y: number, radius: number) => new Circle(Vec2.make(x, y), radius)
+ */
   static make = (center: Vec2, radius: number) => new Circle(center, radius)
 
+  /*
   project(axis: Vec2) {
   
     let min = Vec2.dot(this.center.sub(axis.scale(this.radius)), axis)
@@ -331,6 +389,7 @@ export class Circle {
 
     return [min, max]
   }
+ */
 
   constructor(readonly center: Vec2, readonly radius: number) {}
 }
@@ -348,11 +407,14 @@ export class Line {
 
   static make_x = (x0: number, y0: number, x1: number, y1: number) => 
   new Line(Vec2.make(x0, y0), Vec2.make(x1, y1))
+  /*
 
   static make = (a: Vec2, b: Vec2) => new Line(a, b)
+ */
 
-  get bounds() { return Rect.from_points(this.a, this.b) }
+  //get bounds() { return Rect.from_points(this.a, this.b) }
 
+  /*
   closest_point(p: Vec2) {
     let v = this.b.sub(this.a)
     let w = p.sub(this.a)
@@ -361,7 +423,9 @@ export class Line {
     else if (t > 1) { t = 1 }
     return v.scale(t).add(this.a)
   }
+ */
 
+  /*
   intersects_rect(rect: Rect, out_intersection_point?: Vec2) {
   
     let ca = rect.get_sector(this.a),
@@ -388,6 +452,8 @@ export class Line {
 
     return false
   }
+ */
+/*
   intersects_line(line: Line, out_intersection_point?: Vec2) {
   
     let e = this.b.sub(this.a)
@@ -414,7 +480,9 @@ export class Line {
     return true
   }
 
+ */
 
+  /*
   project(axis: Vec2) {
 
     let dot = this.a.x * axis.x + this.a.y * axis.y
@@ -425,13 +493,16 @@ export class Line {
 
     return [min, max]
   }
+ */
 
   add(v: Vec2) {
     return new Line(this.a.add(v), this.b.add(v))
   }
+  /*
   sub(v: Vec2) {
     return new Line(this.a.sub(v), this.b.sub(v))
   }
+ */
 
   constructor(
     public a: Vec2, 
@@ -440,10 +511,12 @@ export class Line {
 
 export class Mat3x2 {
 
+  /*
   static make = (m11: number, m12: number, m21: number, m22: number, m31: number, m32: number) =>
   new Mat3x2(m11, m12, m21, m22, m31, m32)
   static copy = (m: Mat3x2) => new Mat3x2(m.m11, m.m12, m.m21, m.m22, m.m31, m.m32)
 
+ */
 
   static get identity() { return new Mat3x2(1, 0, 0, 1, 0, 0) }
 
@@ -505,6 +578,7 @@ export class Mat3x2 {
   mul(m: Mat3x2) { return Mat3x2.mul(this, m) }
   add(m: Mat3x2) { return Mat3x2.add(this, m) }
 
+  /*
   get invert() {
     let { m11, m12, m21, m22, m31, m32 } = this
   
@@ -520,12 +594,16 @@ export class Mat3x2 {
       (m31 * m12 - m11 * m32) * inv_det
     )
   }
+ */
+
+  /*
 
   get scaling_factor() {
     let { m11, m12, m21, m22, m31, m32 } = this
 
     return Math.sqrt(m11 * m11 + m12 * m12)
   }
+ */
 
   constructor(public m11: number,
               public m12: number,
@@ -562,6 +640,7 @@ export class Mat4x4 {
   }
 
 
+  /*
   mul(rhs: Mat4x4) {
 
     let { m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44 } = this
@@ -589,6 +668,7 @@ export class Mat4x4 {
 
     return m
   }
+ */
 
   constructor(public m11: number,
               public m12: number,

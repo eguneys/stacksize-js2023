@@ -109,6 +109,7 @@ export class WebGL_Shader extends Shader {
         } else {
           let uniform_type = UniformType.None
 
+          /*
           if (type === App.renderer.gl.FLOAT) {
             uniform_type = UniformType.Float
           } else if (type === App.renderer.gl.FLOAT_VEC2) {
@@ -119,11 +120,13 @@ export class WebGL_Shader extends Shader {
             uniform_type = UniformType.Float4
           } else if (type === App.renderer.gl.FLOAT_MAT3x2) {
             uniform_type = UniformType.Mat3x2
-          } else if (type === App.renderer.gl.FLOAT_MAT4) {
+          }
+         */
+          if (type === App.renderer.gl.FLOAT_MAT4) {
             uniform_type = UniformType.Mat4x4
           } else {
             valid_uniforms = false
-            Log.error(`Unsupported uniform type`)
+            Log.error(`Uut`)
             break
           }
 
@@ -247,27 +250,30 @@ export class WebGL_Mesh extends Mesh {
         component_size = 4
         components = 1
       }
+     */
 
       if (attribute.type === VertexType.Float2) {
         type = App.renderer.gl.FLOAT
         component_size = 4
         components = 2
       }
-     */
 
+     /*
       if (attribute.type === VertexType.Float3) {
         type = App.renderer.gl.FLOAT
         component_size = 4
         components = 3
       }
+     */
 
-      /*
 
+    /*
       if (attribute.type === VertexType.Float4) {
         type = App.renderer.gl.FLOAT
         component_size = 4
         components = 4
       }
+     */
 
 
       if (attribute.type === VertexType.UByte4) {
@@ -275,7 +281,6 @@ export class WebGL_Mesh extends Mesh {
         component_size = 1
         components = 4
       }
-     */
 
       let location = attribute.index
       App.renderer.gl.enableVertexAttribArray(location)
@@ -512,9 +517,11 @@ export class Renderer {
     uniforms.forEach((uniform, i) => {
       let location = shader.uniform_locations[i]
 
+      /*
       if (uniform.type === UniformType.Sampler2D) {
         return
       }
+     */
 
       if (uniform.type === UniformType.Texture2D) {
         for (let n = 0; n < uniform.array_length; n++) {
@@ -548,20 +555,24 @@ export class Renderer {
         i_data += 2 * uniform.array_length
       } 
      */
+    /*
       if (uniform.type === UniformType.Float3) {
         App.renderer.gl.uniform3fv(location, data.slice(i_data, i_data + 3 * uniform.array_length))
         i_data += 3 * uniform.array_length
       } 
+     */
       /*
       if (uniform.type === UniformType.Float4) {
         App.renderer.gl.uniform4fv(location, data.slice(i_data, i_data + 4 * uniform.array_length))
         i_data += 4 * uniform.array_length
       } 
      */
+    /*
       if (uniform.type === UniformType.Mat3x2) {
         App.renderer.gl.uniformMatrix3fv(location, false, data.slice(i_data, i_data + 9 * uniform.array_length))
         i_data += 9 * uniform.array_length
       } 
+     */
       if (uniform.type === UniformType.Mat4x4) {
         App.renderer.gl.uniformMatrix4fv(location, false, data.slice(i_data, i_data + 16 * uniform.array_length))
         i_data += 16 * uniform.array_length
@@ -573,18 +584,16 @@ export class Renderer {
     // blend
     {
 
-      /*
       let color_op = gl_get_blend_func(pass.blend.color_op)
       let alpha_op = gl_get_blend_func(pass.blend.alpha_op)
       let color_src = gl_get_blend_factor(pass.blend.color_src)
       let color_dst = gl_get_blend_factor(pass.blend.color_dst)
       let alpha_src = gl_get_blend_factor(pass.blend.alpha_src)
       let alpha_dst = gl_get_blend_factor(pass.blend.alpha_dst)
-     */
 
       this.gl.enable(this.gl.BLEND)
-      //this.gl.blendEquationSeparate(color_op, alpha_op)
-      //this.gl.blendFuncSeparate(color_src, color_dst, alpha_src, alpha_dst)
+      this.gl.blendEquationSeparate(color_op, alpha_op)
+      this.gl.blendFuncSeparate(color_src, color_dst, alpha_src, alpha_dst)
     }
 
     // depth
@@ -642,13 +651,11 @@ export class Renderer {
                                       index_size * pass.index_start,
                                       pass.instance_count)
       } else {
-        /*
         this.gl.drawElements(
           this.gl.TRIANGLES,
           pass.index_count,
           index_format,
           index_size * pass.index_start)
-         */
       }
     }
 

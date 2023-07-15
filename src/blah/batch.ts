@@ -14,7 +14,6 @@ const sampler_uniform = 'u_texture_sampler'
 const matrix_uniform = 'u_matrix'
 
 const format = new VertexFormat([
-
   VertexAttribute.make(0, VertexType.Float2, false),
   VertexAttribute.make(1, VertexType.Float2, false),
   VertexAttribute.make(2, VertexType.UByte4, true),
@@ -87,6 +86,7 @@ export class Batch {
     return this.m_matrix
   }
 
+  /*
   push_scissor(scissor: Rect) {
     this.m_scissor_stack.push(this.m_batch.scissor)
     if (this.m_batch.elements > 0 && scissor !== this.m_batch.scissor) {
@@ -107,6 +107,7 @@ export class Batch {
 
   peek_scissor() {}
 
+ */
   /*
   push_blend(blend: BlendMode) {}
 
@@ -115,11 +116,13 @@ export class Batch {
   peek_blend() {}
   */
 
+ /*
   push_material(material: Material) {}
 
   pop_material() {}
 
   peek_material() {}
+ */
 
   set_texture(texture: Texture) {
   
@@ -194,12 +197,8 @@ export class Batch {
 
 
   render_single_batch(pass: DrawCall, b: DrawBatch, matrix: Mat4x4) { 
-  
-    if (!b.material) {
-      pass.material = this.m_default_material
-    } else {
-      pass.material = b.material
-    }
+
+    pass.material = b.material || this.m_default_material
 
     if (pass.material.has_value(texture_uniform)) {
       pass.material.set_texture(texture_uniform, b.texture)
@@ -215,8 +214,8 @@ export class Batch {
 
     pass.material.set_matrix(matrix_uniform, matrix)
 
-    pass.has_scissor = b.scissor.w >= 0 && b.scissor.h >= 0
-    pass.scissor = b.scissor
+    //pass.has_scissor = b.scissor.w >= 0 && b.scissor.h >= 0
+    //pass.scissor = b.scissor
     pass.index_start = b.offset * 3
     pass.index_count = b.elements * 3
 
@@ -259,6 +258,21 @@ export class Batch {
       0, 0, 0, 0, 0, 0, 0, 0,
       color, color, color, color,
       0, 0, 255)
+  }
+
+  tex(texture: Texture, pos: Vec2 = Vec2.zero, color: Color = Color.white) {
+    this.set_texture(texture)
+
+    let w = texture.width
+    let h = texture.height
+
+    let { m_tex_mult, m_tex_wash } = this
+
+    this.PUSH_QUAD(
+      pos.x, pos.y, pos.x + w, pos.y, pos.x + w, pos.y + h, pos.x, pos.y + h,
+      0, 0, 1, 0, 1, 1, 0, 1,
+      color, color, color, color,
+      m_tex_mult, m_tex_wash, 0)
   }
 
   stex(sub: Subtexture, pos: Vec2 = Vec2.zero, color: Color = Color.white) {

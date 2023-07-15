@@ -66,13 +66,6 @@ class Input {
   _on_drag(d: DragEvent, d0?: DragEvent) {
     this.hooks.find(_ => _.on_drag?.(d, d0))
   }
-  _on_context() {
-    this.hooks.find(_ => _.on_context?.())
-  }
-  _on_wheel(d: number, e: EventPosition) {
-    this.hooks.find(_ => _.on_wheel?.(d, e))
-  }
-
 
   listen(element: HTMLElement) {
 
@@ -145,15 +138,10 @@ class Input {
         _drag = undefined
         _m = undefined
       },
-      _onWheel(d: number, e: Vec2) {
-        self._on_wheel?.(d, map_e(e))
-      },
-      _onContextMenu() {
-      }
     }, element)
 
 
-    document.addEventListener('scroll', () => { _on_scroll() }, { capture: true, passive: true })
+    //document.addEventListener('scroll', () => { _on_scroll() }, { capture: true, passive: true })
 
     window.addEventListener('resize', () => { _on_scroll() }, { passive: true })
 

@@ -3,14 +3,6 @@ import { lerp, ease } from './lerp'
 
 export class Tween {
 
-  static make = (
-    values: Array<number>,
-    duration: number,
-    loop: boolean = false) => {
-      return new Tween(values.slice(0), [duration], loop ? 1 : 0).init()
-    }
-
-
     get value() {
       return this._value
     }
@@ -25,10 +17,12 @@ export class Tween {
       return this._completed
     }
 
+    /*
     complete_now() {
       this._value = this._values[this._values.length - 1]
       this._completed = true
     }
+   */
 
     update(dt: number) {
 

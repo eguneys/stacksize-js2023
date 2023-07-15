@@ -38,46 +38,15 @@ export class Mouse {
       _onDragStart?.(ep(e as MouchEvent), (e as MouseEvent).buttons === 2 || (e as MouseEvent).button === 2) }
     const dragMove = (e: Event) => { _onDragMove?.(ep(e as MouchEvent)) }
     const dragEnd = (e: Event) => { _onDragEnd?.(ep(e as MouchEvent)) }
-    const contextMenu = (e: Event) => { 
-      if (_onContextMenu) {
-        e.preventDefault() 
-        _onContextMenu() 
-      }
-    }
-    const onWheel = (e: Event) => { 
-      if (_onWheel) {
-        _onWheel(Math.sign((e as WheelEvent).deltaY), ep(e as MouchEvent)) 
-        e.preventDefault()
-      }
-    }
 
-    $_.addEventListener('wheel', onWheel, { passive: false })
-
-    $_.addEventListener('touchstart', dragStart, { capture: true, passive: false }) 
     $_.addEventListener('mousedown', dragStart, { capture: true, passive: false }) 
-    $_.addEventListener('contextmenu', contextMenu)
-
     document.addEventListener('mousemove', dragMove)
     document.addEventListener('mouseup', dragEnd)
 
-    document.addEventListener('touchmove', dragMove)
-    document.addEventListener('touchend', dragEnd)
-
     return () => {
-      $_.removeEventListener('wheel', onWheel) 
-
-
-      $_.removeEventListener('touchstart', dragStart)
       $_.removeEventListener('mousedown', dragStart)
-
-
-      $_.removeEventListener('contextmenu', contextMenu)
-
       document.removeEventListener('mousemove', dragMove)
       document.removeEventListener('mouseup', dragEnd)
-
-      document.removeEventListener('touchmove', dragMove)
-      document.removeEventListener('touchend', dragEnd)
     }
   }
 }

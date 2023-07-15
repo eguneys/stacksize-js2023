@@ -1,10 +1,10 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@ampproject/rollup-plugin-closure-compiler': link:..\rollup-plugin-closure-compiler
   aset: link:..\aset
   chokidar: ^3.5.3
   concurrently: ^8.2.0
+  jspngopt: ^0.2.0
   roadroller: ^2.1.0
   rollup-plugin-sizes: ^1.0.5
   rollup-plugin-visualizer: ^5.9.2
@@ -13,10 +13,10 @@ specifiers:
   vite-plugin-glsl: ^1.1.2
 
 devDependencies:
-  '@ampproject/rollup-plugin-closure-compiler': link:../rollup-plugin-closure-compiler
   aset: link:../aset
   chokidar: 3.5.3
   concurrently: 8.2.0
+  jspngopt: 0.2.0
   roadroller: 2.1.0
   rollup-plugin-sizes: 1.0.5
   rollup-plugin-visualizer: 5.9.2
@@ -281,6 +281,10 @@ packages:
       fill-range: 7.0.1
     dev: true
 
+  /buffer-crc32/0.2.13:
+    resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
+    dev: true
+
   /chalk/4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
@@ -477,6 +481,14 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       is-docker: 2.2.1
+    dev: true
+
+  /jspngopt/0.2.0:
+    resolution: {integrity: sha512-hQ/F4ZRom0/PV9MG0V1jTGTXJ/A1WeuURUCcA4W4a9kppuSFTQOcy/3d6/hI9FRwFGHW75K7Iv8lXOUzc6M/Fg==}
+    engines: {node: '>=0.11'}
+    hasBin: true
+    dependencies:
+      buffer-crc32: 0.2.13
     dev: true
 
   /lodash/4.17.21:

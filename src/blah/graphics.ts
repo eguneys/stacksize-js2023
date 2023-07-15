@@ -39,25 +39,6 @@ export class BlendMode {
     BlendFactor.One,
     BlendFactor.OneMinusSrcAlpha
   )
-  static NonPremultiplied = new BlendMode(
-    BlendOp.Add,
-    BlendFactor.SrcAlpha,
-    BlendFactor.OneMinusSrcAlpha,
-    BlendOp.Add,
-    BlendFactor.SrcAlpha,
-    BlendFactor.OneMinusSrcAlpha
-
-  )
-  //static Subtract = new BlendMode()
-  static Additive = new BlendMode(
-    BlendOp.Add,
-    BlendFactor.SrcAlpha,
-    BlendFactor.One,
-    BlendOp.Add,
-    BlendFactor.SrcAlpha,
-    BlendFactor.One)
-
-
   constructor(readonly color_op: BlendOp,
               readonly color_src: BlendFactor,
               readonly color_dst: BlendFactor,
@@ -79,21 +60,6 @@ const mat_float32_data = (mat: Mat4x4) => {
 const blah_calc_uniform_size = (uniform: UniformInfo) => {
   let components = 0
   switch(uniform.type) {
-    case UniformType.Float: 
-      components = 1
-      break
-    case UniformType.Float2:
-      components = 2
-      break
-    case UniformType.Float3:
-      components = 3
-      break
-    case UniformType.Float4:
-      components = 4
-      break
-    case UniformType.Mat3x2:
-      components = 9
-      break
     case UniformType.Mat4x4:
       components = 16
       break
@@ -144,13 +110,7 @@ export class VertexFormat {
 
     attributes.forEach(attribute => {
       switch (attribute.type) {
-        case VertexType.Float: this.stride += 4
-          break
         case VertexType.Float2: this.stride += 8 
-          break
-        case VertexType.Float3: this.stride += 12 
-          break
-        case VertexType.Float4: this.stride += 16 
           break
         case VertexType.UByte4: this.stride += 4 
           break
@@ -329,11 +289,13 @@ export class Material {
         return 
       }
 
+      /*
       if (uniform.type === UniformType.Texture2D) {
       }
 
       if (uniform.type === UniformType.Sampler2D) {
       }
+     */
 
       float_size += blah_calc_uniform_size(uniform)
     })
@@ -407,7 +369,7 @@ export class Material {
     })
 
     if (!_) {
-      Log.warn(`No uniform ${name} exists`)
+      Log.warn(`Nu${name} e`)
     }
   }
 
@@ -435,13 +397,13 @@ export class DrawCall {
 
     if (!pass.target) {
       pass.target = App.backbuffer
-      Log.warn('Trying to draw with an invalid Target; falling back to back buffer')
+      Log.warn('TT; fb bb')
     }
 
     let index_count = pass.mesh.index_count
 
     if (pass.index_start + pass.index_count > index_count) {
-      Log.warn(`Trying to draw more indices than exists in the index buffer (${pass.index_start}-${pass.index_start+pass.index_count} / ${index_count}; trimming extra indices`)
+      Log.warn(`Tb(${pass.index_start}-${pass.index_start+pass.index_count} / ${index_count}; trim`)
 
       if (pass.index_start > pass.index_count) {
         return
@@ -453,7 +415,7 @@ export class DrawCall {
 
     let instance_count = pass.mesh.instance_count
     if (pass.instance_count > instance_count) {
-        Log.warn(`Trying to draw more instances than exists in the index buffer (${pass.instance_count} / ${instance_count}); trimming extra instances`)
+        Log.warn(`Ttdmiteiib(${pass.instance_count} / ${instance_count}); trim`)
 
         pass.instance_count = instance_count
     }
@@ -470,10 +432,12 @@ export class DrawCall {
     }
 
 
+    /*
     if (pass.has_scissor) {
       pass.scissor = pass.scissor.overlaps_rect(Rect.make(0, 0, draw_size.x, draw_size.y))
     }
 
+   */
 
     App.renderer.render(pass)
   }
