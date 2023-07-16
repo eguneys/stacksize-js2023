@@ -51,6 +51,9 @@ export class Batch {
   }
 
   rect(rect: Rect, color: Color) {
+    let { ctx } = App.backbuffer
+    ctx.fillStyle = color.css
+    ctx.fillRect(rect.x, rect.y, rect.w, rect.h)
   }
 
   tex(texture: Texture, pos: Vec2 = Vec2.zero, color: Color = Color.white) {

@@ -8,8 +8,8 @@ function app(element: HTMLElement) {
 
   App.run({
     name: 'stacksize-js2023',
-    width: 1920,
-    height: 1080,
+    width: 320,
+    height: 180,
     on_startup() {
       game.init()
     },

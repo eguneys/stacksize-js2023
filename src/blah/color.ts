@@ -9,6 +9,11 @@ export class Color {
   static black = new Color(0, 0, 0, 255)
   static red = new Color(255, 0, 0, 255)
 
+  get css() {
+    let { r, g, b, a } = this
+    return `rgba(${r}, ${g}, ${b}, ${a})`
+  }
+
   constructor(
     readonly r: number, 
     readonly g: number, 

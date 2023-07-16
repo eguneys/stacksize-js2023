@@ -44,18 +44,29 @@ export class RectView extends Play {
   }
 }
 
+
+class Card extends Play {
+  _init() {
+    let a = this.make(Anim, Vec2.zero, {
+      name: 'card_bg'
+    })
+    a.origin = Vec2.make(16, 20)
+    a.play_now('idle')
+  }
+}
+
 class StackSizePlay extends Play {
   _init() {
 
-    this.make(RectView, Vec2.zero, { w: 1920, h: 1080, color: Color.hex(0xb4beb4)})
+    this.make(RectView, Vec2.zero, { w: 320, h: 180, color: Color.hex(0x101088)})
+
+    this.make(Card, Vec2.make(30, 154), {})
+    this.make(Card, Vec2.make(64, 154), {})
 
 
-    let a = this.make(Anim, Vec2.make(1800, 1000), {
-      name: 'rank'
-    })
-    a.origin = Vec2.make(32, 32)
-    a.play_now('3')
-    a.rotation = Math.PI / 3
+
+    this.make(Card, Vec2.make(256, 24), {})
+    this.make(Card, Vec2.make(290, 24), {})
 
   }
 }
@@ -84,8 +95,8 @@ let scene_transition: SceneTransition
 
 export class Game extends Play {
 
-  static width = 1920
-  static height = 1080
+  static width = 320
+  static height = 180
 
   //static v_screen = Vec2.make(Game.width, Game.height)
 
