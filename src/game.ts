@@ -1,6 +1,6 @@
-import { TextureFilter, TextureSampler } from './blah'
+//import { TextureFilter, TextureSampler } from './blah'
 import { Color } from './blah'
-import { Rect, Vec2, Mat3x2 } from './blah'
+import { Rect, Vec2 } from './blah'
 
 import { Time, App, batch, Batch, Target } from './blah'
 
@@ -96,11 +96,11 @@ export class Game extends Play {
   static width = 1920
   static height = 1080
 
-  static v_screen = Vec2.make(Game.width, Game.height)
+  //static v_screen = Vec2.make(Game.width, Game.height)
 
   _init() {
 
-    batch.default_sampler = TextureSampler.make(TextureFilter.Linear)
+    //batch.default_sampler = TextureSampler.make(TextureFilter.Linear)
 
     this.objects = []
 

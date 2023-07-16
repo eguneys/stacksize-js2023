@@ -240,7 +240,6 @@ export class Rect {
   }
  */
 
-/*
   contains_rect(r: Rect) {
     return r.x >= this.x && r.x + r.w < this.x + this.w && r.y >= this.y && r.y + r.h < this.y + this.h
   }
@@ -264,7 +263,6 @@ export class Rect {
     return result
   }
 
- */
   /*
   intersects(l: Line) {
     return l.intersects_rect(this)

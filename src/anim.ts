@@ -1,6 +1,6 @@
-import { TextureFilter, TextureSampler } from './blah'
+//import { TextureFilter, TextureSampler } from './blah'
 import { Color } from './blah'
-import { Rect, Vec2, Mat3x2 } from './blah'
+import { Rect, Vec2 } from './blah'
 import { Time, App, batch, Batch, Target } from './blah'
 
 import Content from './content'
@@ -130,9 +130,9 @@ export class Anim extends Play {
       return
     }
 
-    batch.push_matrix(Mat3x2.create_transform(this.position, this.origin, this.scale, this.rotation))
+    //batch.push_matrix(Mat3x2.create_transform(this.position, this.origin, this.scale, this.rotation))
     //this.g_position = Vec2.transform(Vec2.zero, batch.m_matrix)
     batch.stex(this.subtexture, Vec2.zero, this.alpha_color)
-    batch.pop_matrix()
+    //batch.pop_matrix()
   }
 }

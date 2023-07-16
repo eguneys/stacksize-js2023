@@ -1,6 +1,6 @@
-import { TextureFilter, TextureSampler } from './blah'
+//import { TextureFilter, TextureSampler } from './blah'
 import { Color } from './blah'
-import { Rect, Vec2, Mat3x2 } from './blah'
+import { Rect, Vec2 } from './blah'
 import { Time, App, batch, Batch, Target } from './blah'
 
 import Content from './content'
@@ -143,9 +143,9 @@ export abstract class Play {
   _init() {}
   _update() {}
   _draw(batch: Batch) {
-    batch.push_matrix(Mat3x2.create_transform(this.position, this.origin, this.scale, this.rotation))
+    //batch.push_matrix(Mat3x2.create_transform(this.position, this.origin, this.scale, this.rotation))
     this._draw_children(batch)
-    batch.pop_matrix()
+    //batch.pop_matrix()
   }
   _dispose() {}
 }

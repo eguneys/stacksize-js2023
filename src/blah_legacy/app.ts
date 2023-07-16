@@ -30,8 +30,8 @@ class BackBuffer extends Target {
   get textures() { return BackBuffer.empty_textures }
 
 
-  clear(color: Color) {
-    App.renderer.clear_backbuffer(color)
+  clear(color: Color, depth: number, stencil: number) {
+    App.renderer.clear_backbuffer(color, depth, stencil)
   }
 
 }
