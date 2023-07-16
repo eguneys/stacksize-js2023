@@ -82,14 +82,43 @@ class Card extends Play {
       } else {
         this.bg.play_now('back')
       }
+      this.flash()
     })
+
   }
+}
+
+class Chips extends Play {
+
+  one!: Anim
+
+  _init() {
+    this.one = this.make(Anim, Vec2.zero, {
+      name: 'chips'
+    })
+    this.one.origin = Vec2.make(15, 15)
+    this.one.play_now('6')
+    this.one.visible = false
+  }
+
+
+  spawn(chips: number) {
+    this.one.visible = true
+    this.one.play_now(`${chips}`)
+    this.one.flash()
+  }
+
 }
 
 class StackSizePlay extends Play {
 
   me_cards!: [Card, Card]
   op_cards!: [Card, Card]
+
+  me_chips!: Chips
+  op_chips!: Chips
+  me_bets!: Chips
+  op_bets!: Chips
 
   _init() {
 
@@ -107,8 +136,19 @@ class StackSizePlay extends Play {
       this.make(Card, Vec2.make(290, 24), {})
     ]
 
-    this.deal(cards.slice(0, 2))
 
+
+    this.me_chips = this.make(Chips, Vec2.make(200, 156), {})
+    this.op_chips = this.make(Chips, Vec2.make(280, 56), {})
+    this.me_bets = this.make(Chips, Vec2.make(200, 106), {})
+    this.op_bets = this.make(Chips, Vec2.make(280, 106), {})
+
+
+
+    this.deal([cards[0], cards[1]])
+
+    this.me_chips.spawn(12)
+    this.op_chips.spawn(12)
   }
 
 

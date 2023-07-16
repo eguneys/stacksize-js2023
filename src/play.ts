@@ -7,6 +7,7 @@ import Content from './content'
 import Input, { Hooks, EventPosition, DragEvent } from './input'
 
 import { Tween } from './tween'
+import { appr } from './lerp'
 
 
 export const bg1 = Color.hex(0x202431)
@@ -100,7 +101,26 @@ export abstract class Play {
     return this 
   }
 
+  _flash_timer: number = 0
+  previous_visible: boolean = this.visible
+
+  flash() {
+    this.previous_visible = this.visible
+    this._flash_timer = 1.7
+  }
+
   update() {
+
+    if (this._flash_timer > 0) {
+      this._flash_timer = appr(this._flash_timer, 0, Time.delta)
+      if (Time.between_interval(0.2)) {
+        this.visible = false
+      } else {
+        this.visible = true
+      }
+    } else {
+      this.visible = this.previous_visible
+    }
 
     this.objects.forEach(_ => _.update())
 

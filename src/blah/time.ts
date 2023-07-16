@@ -5,7 +5,7 @@ const modf = (x: number, m: number) => {
 export class _Time {
 
 
-  ticks_per_second: number = 1000
+  ticks_per_second: number = 16 * 60
   ticks: number = 0
   seconds: number = 0
   delta: number = 0
