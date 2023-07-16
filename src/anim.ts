@@ -134,6 +134,5 @@ export class Anim extends Play {
     //this.g_position = Vec2.transform(Vec2.zero, batch.m_matrix)
     batch.stex(this.subtexture, Vec2.zero, this.alpha_color)
     batch.pop_matrix()
-    
   }
 }
