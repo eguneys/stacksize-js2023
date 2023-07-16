@@ -27,11 +27,13 @@ export class Platform {
     this.canvas.width = this.config.width
     this.canvas.height = this.config.height
 
-    return this.canvas.getContext('webgl2')
+    return this.canvas.getContext('2d')
 
   }
 
 
-  init() {}
+  init() {
+    this.gl_context_create()
+  }
   ready() {}
 }

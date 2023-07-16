@@ -2,8 +2,7 @@ import { App } from './app'
 import { Color } from './color'
 import { Target, Texture } from './graphics'
 
-class Canvas {
-}
+type Canvas = HTMLCanvasElement
 
 class Canvas_Target extends Target {
 
@@ -13,6 +12,12 @@ class Canvas_Target extends Target {
 
   m_width: number
   m_height: number
+
+  m_ctx!: CanvasRenderingContext2D
+
+  get ctx() {
+    return this.m_ctx
+  }
 
   get textures() { return this.m_attachments }
 
@@ -29,8 +34,10 @@ class Canvas_Target extends Target {
     this.m_width = width
     this.m_height = height
 
-    let tex = Texture.create(width, height)
-    this.m_attachments.push(tex)
+    //let tex = Texture.create(width, height)
+    //this.m_attachments.push(tex)
+
+    this.m_ctx = this.m_canvas.getContext('2d')!
   }
 
 }
@@ -42,10 +49,14 @@ class Canvas_Texture extends Texture {
   get width() { return this.m_width }
   get height() { return this.m_height }
 
-  m_data!: ImageData | HTMLImageElement
+  m_data!: HTMLImageElement
 
-  set_data(data: ImageData | HTMLImageElement) {
+  set_data(data: HTMLImageElement) {
     this.m_data = data
+  }
+
+  get image() {
+    return this.m_data
   }
 
   constructor(width: number, height: number) {
@@ -71,7 +82,9 @@ export class Renderer {
   }
 
   create_canvas() {
-    return new Canvas()
+    let canvas = document.createElement('canvas')
+
+    return canvas
   }
 
   create_texture(width: number, height: number) {
@@ -79,7 +92,6 @@ export class Renderer {
   }
 
   clear_backbuffer(color: Color, canvas?: Canvas) {
-
   }
 
   update() {}

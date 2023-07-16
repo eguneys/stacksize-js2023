@@ -29,9 +29,21 @@ class BackBuffer extends Target {
 
   get textures() { return BackBuffer.empty_textures }
 
+  m_ctx!: CanvasRenderingContext2D
 
-  clear(color: Color) {
-    App.renderer.clear_backbuffer(color)
+  get ctx() {
+
+    if (!this.m_ctx) {
+      this.m_ctx = this.canvas.getContext('2d')!
+      return this.m_ctx
+    } else {
+      return this.m_ctx
+    }
+  }
+
+  constructor(readonly canvas: HTMLCanvasElement) {
+    super()
+
   }
 
 }
@@ -53,12 +65,13 @@ class _App {
   run(config: Config) {
     this.config = config
 
-    this.backbuffer = new BackBuffer()
 
     {
       this.platform = Platform.try_make_platform(this.config)
       this.platform.init()
     }
+
+    this.backbuffer = new BackBuffer(this.canvas!)
 
     {
       this.renderer = Renderer.try_make_renderer()

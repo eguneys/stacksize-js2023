@@ -55,32 +55,23 @@ class StackSizePlay extends Play {
     })
     a.origin = Vec2.make(32, 32)
     a.play_now('3')
-    a.rotation = Math.PI / 2
+    a.rotation = Math.PI / 3
 
   }
 }
 
 class SceneTransition extends Play {
 
-  target!: Target
-
   current!: Play
 
   _init() {
 
     this.current = this._make(StackSizePlay, Vec2.zero, {})
-
-    this.target = Target.create(Game.width, Game.height)
-
   }
 
   _draw(batch: Batch) {
+
     this.current.draw(batch)
-    batch.render(this.target)
-    batch.clear()
-
-
-    batch.tex(this.target.texture(0))
     batch.render(App.backbuffer)
     batch.clear()
   }

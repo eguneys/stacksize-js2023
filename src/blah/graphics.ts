@@ -8,13 +8,16 @@ export abstract class Texture {
   }
 
 
-  static create = (width: number, height: number, data?: HTMLImageElement) => {
-    return App.renderer.create_texture(width, height)
+  static create = (width: number, height: number, data: HTMLImageElement) => {
+    let res = App.renderer.create_texture(width, height)
+    res.set_data(data)
+    return res
   }
 
+  abstract image: HTMLImageElement
   abstract width: number
   abstract height: number
-  abstract set_data(data: ImageData | HTMLImageElement): void
+  abstract set_data(data: HTMLImageElement): void
 }
 
 export type Attachments = Array<Texture>
@@ -39,5 +42,11 @@ export abstract class Target {
 
   abstract textures: Texture[]
 
-  abstract clear(color: Color): void
+
+  abstract ctx: CanvasRenderingContext2D
+
+  clear(color: Color) {
+    this.ctx.fillStyle = 'black'
+    this.ctx.fillRect(0, 0, this.width, this.height)
+  }
 }

@@ -4,6 +4,8 @@ import { Color } from './color'
 import { Target, Texture } from './graphics'
 import { Subtexture } from './subtexture'
 
+type Quad = [number, number, number, number, number, number, number, number]
+
 class DrawBatch {
   offset: number = 0
   elements: number = 0
@@ -28,9 +30,20 @@ export class Batch {
   m_batch_insert = 0
 
   pop_matrix() {
+    let { ctx } = App.backbuffer
+    ctx.restore()
   }
 
   push_matrix(matrix: Mat3x2, absolute: boolean = false) {
+    let { ctx } = App.backbuffer
+    ctx.save()
+
+    let [a, b, c, d, e, f] = [
+      matrix.m11, matrix.m12, matrix.m21,
+      matrix.m22, matrix.m31, matrix.m32,
+      0, 0, 1
+    ]
+    ctx.transform(a, b, c, d, e, f)
   }
 
 
@@ -72,6 +85,11 @@ export class Batch {
       m_tex_mult, m_tex_wash, 0)
   }
 
+  m_texture!: Texture
+
+  /*
+  quads: Quad[] = []
+ */
 
   PUSH_QUAD(px0: number, py0: number,
             px1: number, py1: number,
@@ -83,13 +101,27 @@ export class Batch {
             tx3: number, ty3: number,
             col0: Color, col1: Color, col2: Color, col3: Color,
             mult: number, wash: number, fill: number) {
+
+              let { ctx } = App.backbuffer
+              let [dx, dy, dWidth, dHeight, sx, sy, sWidth, sHeight] = [
+                px0, py0,
+                px1 - px0,
+                py2 - py0,
+                tx0 * this.m_texture.width, ty0 * this.m_texture.height,
+                (tx1 - tx0) * this.m_texture.width,
+                (ty2 - ty0) * this.m_texture.height
+              ]
+
+              let { image } = this.m_texture
+
+              ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
   }
 
   set_texture(texture: Texture) {
+    this.m_texture = texture
   }
 
   render(target: Target = App.backbuffer) {
-
   }
 
 }
