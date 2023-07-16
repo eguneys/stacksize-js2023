@@ -51,7 +51,9 @@ class Card extends Play {
       name: 'card_bg'
     })
     a.origin = Vec2.make(16, 20)
-    a.play_now('idle')
+    a.play_now('spawn', () => {
+      a.play_now('idle')
+    })
   }
 }
 
@@ -77,7 +79,7 @@ class SceneTransition extends Play {
 
   _init() {
 
-    this.current = this._make(StackSizePlay, Vec2.zero, {})
+    this.current = this.make(StackSizePlay, Vec2.zero, {})
   }
 
   _draw(batch: Batch) {
@@ -118,8 +120,7 @@ export class Game extends Play {
     })
   }
 
-  _update() {
-  }
+  _update() {}
 
   _draw() {
 
