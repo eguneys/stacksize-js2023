@@ -113,6 +113,11 @@ export abstract class Play {
   _flash_timer: number = 0
   previous_visible: boolean = this.visible
 
+  set visible_(v: boolean) {
+    this.visible = v
+    this.previous_visible = v
+  }
+
   flash() {
     this.previous_visible = this.visible
     this._flash_timer = 1.7

@@ -8,7 +8,7 @@ import { bg1, link_color, Play, PlayType} from './play'
 import Content from './content'
 
 import { Anim } from './anim'
-import { EventPosition, DragEvent } from './input'
+import Input, { EventPosition, DragEvent } from './input'
 
 
 type ClickableData = {
@@ -377,6 +377,246 @@ class Letters extends Play {
   }
 }
 
+class Tips extends Play {
+
+  bg!: RectView
+  letters!: Letters[]
+
+  _init() {
+    this.letters = []
+  }
+
+
+  say(text: string) {
+
+    this.bg?.dispose()
+    this.letters.forEach(_ => _.dispose())
+
+    let rows = text.split('\n')
+
+    this.bg = this.make(RectView, Vec2.zero, { w: 80, h: 20, color: Color.hex(0xd6ffff)})
+
+    this.letters = rows.map((text, row) =>
+      this.make(Letters, Vec2.make(2, 2 + row * 6), {
+        text
+      })
+    )
+  }
+}
+
+class Help extends Play {
+
+  page1!: HelpPage1
+  page2!: HelpPage2
+
+  _init() {
+
+    let self = this
+
+    this.make(Clickable, Vec2.zero, {
+      rect: Rect.make(0, 0, 320, 180),
+      on_click() {
+        self.visible_ = false
+      }
+    })
+
+
+
+    this.page1 = this.make(HelpPage1, Vec2.zero, {
+      on_next() {
+        self.page1.visible_ = false
+        self.page2.visible_ = true
+      }
+    })
+
+    this.page2 = this.make(HelpPage2, Vec2.zero, {
+      on_next() {
+        self.page2.visible_ = false
+        self.page1.visible_ = true
+      }
+    })
+  }
+}
+
+type HelpPageData = {
+  on_next: () => void
+}
+
+class HelpPage2 extends Play {
+  get data() {
+    return this._data as HelpPageData
+  }
+
+  _init() {
+
+    this.make(RectView, Vec2.make(20, 20), { w: 280, h: 140, color: Color.hex(0x606461)})
+
+    this.make(Letters, Vec2.make(22 + 60, 22), {
+      text: 'stack size holdem poker'
+    })
+
+
+    let bg_click_here = this.make(RectView, Vec2.make(21, 137), {
+      w: 240, h: 8,
+      color: Color.hex(0xffffff)
+    })
+    bg_click_here.visible_ = false
+
+    let self = this
+    this.make(Clickable, Vec2.make(22, 138), {
+      rect: Rect.make(0, 0, 240, 8),
+      on_hover() {
+        bg_click_here.visible_ = true
+        return true
+      },
+      on_hover_end() {
+        bg_click_here.visible_ = false
+        return true
+      },
+      on_click() {
+        self.data.on_next()
+        return true
+      }
+    })
+
+
+    let bg_click_here2 = this.make(RectView, Vec2.make(21 + 70, 151), {
+      w: 200, h: 8,
+      color: Color.hex(0xffffff)
+    })
+    bg_click_here2.visible_ = false
+
+    this.make(Clickable, Vec2.make(21 + 70, 151), {
+      rect: Rect.make(0, 0, 200, 8),
+      on_hover() {
+        bg_click_here2.visible_ = true
+        return true
+      },
+      on_hover_end() {
+        bg_click_here2.visible_ = false
+        return true
+      }
+    })
+
+
+
+    this.make(Letters, Vec2.make(22, 138), {
+      text: 'click here to see how hands are ranked.'
+    })
+
+    this.make(Letters, Vec2.make(22 + 70, 152), {
+      text: 'click anywhere else to close this.'
+    })
+
+
+
+  }
+
+}
+
+class HelpPage1 extends Play {
+  get data() {
+    return this._data as HelpPageData
+  }
+
+  _init() {
+
+    this.make(RectView, Vec2.make(20, 20), { w: 280, h: 140, color: Color.hex(0x606461)})
+
+    this.make(Letters, Vec2.make(22 + 60, 22), {
+      text: 'stack size holdem poker'
+    })
+
+
+    this.make(Letters, Vec2.make(22, 42), {
+      text: 'first you are dealt 2 cards,and blinds posted.'
+    })
+
+    this.make(Letters, Vec2.make(22, 52), {
+      text: 'you make bets on your turn or call or fold.'
+    })
+
+    this.make(Letters, Vec2.make(22, 62), {
+      text: 'if you fold opponent wins the pot.if you'
+    })
+
+    this.make(Letters, Vec2.make(22, 72), {
+      text: 'call,2 cards opens in the middle, time to bet.'
+    })
+
+    this.make(Letters, Vec2.make(22, 82), {
+      text: 'if you raise, opponent must match your bet.'
+    })
+
+    this.make(Letters, Vec2.make(22, 92), {
+      text: 'then, 3rd card is revealed,final bets placed.'
+    })
+
+    this.make(Letters, Vec2.make(22, 102), {
+      text: 'finally, if noone folds, hands are revealed.'
+    })
+
+    this.make(Letters, Vec2.make(22 + 50, 122), {
+      text: 'strongest hand wins the pot.'
+    })
+
+
+    let bg_click_here = this.make(RectView, Vec2.make(21, 137), {
+      w: 240, h: 8,
+      color: Color.hex(0xffffff)
+    })
+    bg_click_here.visible_ = false
+
+    let self = this
+    this.make(Clickable, Vec2.make(22, 138), {
+      rect: Rect.make(0, 0, 240, 8),
+      on_hover() {
+        bg_click_here.visible_ = true
+        return true
+      },
+      on_hover_end() {
+        bg_click_here.visible_ = false
+        return true
+      },
+      on_click() {
+        self.data.on_next()
+        return true
+      }
+    })
+
+
+    let bg_click_here2 = this.make(RectView, Vec2.make(21 + 70, 151), {
+      w: 200, h: 8,
+      color: Color.hex(0xffffff)
+    })
+    bg_click_here2.visible_ = false
+
+    this.make(Clickable, Vec2.make(21 + 70, 151), {
+      rect: Rect.make(0, 0, 200, 8),
+      on_hover() {
+        bg_click_here2.visible_ = true
+        return true
+      },
+      on_hover_end() {
+        bg_click_here2.visible_ = false
+        return true
+      }
+    })
+
+
+
+    this.make(Letters, Vec2.make(22, 138), {
+      text: 'click here to see how hands are ranked.'
+    })
+
+    this.make(Letters, Vec2.make(22 + 70, 152), {
+      text: 'click anywhere else to close this.'
+    })
+
+
+  }
+}
+
 class StackSizePlay extends Play {
 
   me_cards!: [Card, Card]
@@ -389,6 +629,9 @@ class StackSizePlay extends Play {
 
   op_avatar!: Avatar
   me_avatar!: Avatar
+
+  me_say!: Tips
+  op_say!: Tips
 
   _init() {
 
@@ -422,9 +665,11 @@ class StackSizePlay extends Play {
     this.me_chips.spawn(15)
     this.op_chips.spawn(15)
 
-    this.make(Letters, Vec2.make(0, 0), {
-      text: '0123456789$:,+-'
-    })
+    this.me_say = this.make(Tips, Vec2.make(220, 120), {})
+
+    this.op_say = this.make(Tips, Vec2.make(220, 30), {})
+
+    this.make(Help, Vec2.zero, {})
   }
 
 
@@ -494,7 +739,7 @@ export class Game extends Play {
     App.backbuffer.clear(Color.black)
 
     this._draw_children(batch)
-    //Input._sort_hooks()
+    Input._sort_hooks()
   }
 
 }

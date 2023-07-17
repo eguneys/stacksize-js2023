@@ -18,7 +18,7 @@ function load_image(path: string): Promise<HTMLImageElement> {
 
 const letters = [
   'abcdefghijklmnop'.split(''),
-  'qrstuvwxyz'.split(''),
+  'qrstuvwxyz '.split(''),
   '1234567890!$+-.,:'.split('')
 ]
 
