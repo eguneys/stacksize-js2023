@@ -435,6 +435,65 @@ class Help extends Play {
         self.page1.visible_ = true
       }
     })
+    this.page2.visible_ = false
+
+    this.make(ClickHiButton, Vec2.make(20 + 70, 148), {
+      w: 200,
+      h: 8,
+      text: 'click anywhere else to close this.',
+      on_click() {
+        self.visible_ = false
+      }
+    })
+
+
+  }
+}
+
+type ClickHiButtonData = {
+  text: string,
+  w: number,
+  h: number,
+  on_click: () => void
+}
+
+class ClickHiButton extends Play {
+
+  get data() {
+    return this._data as ClickHiButtonData
+  }
+
+  _init() {
+
+    let { w, h, text, on_click } = this.data
+
+    let bg_click_here = this.make(RectView, Vec2.make(0, 0), {
+      w, h,
+      color: Color.hex(0xffffff)
+    })
+    bg_click_here.visible_ = false
+
+    let self = this
+    this.make(Clickable, Vec2.make(0, 0), {
+      rect: Rect.make(0, 0, w, h),
+      on_hover() {
+        bg_click_here.visible_ = true
+        return true
+      },
+      on_hover_end() {
+        bg_click_here.visible_ = false
+        return true
+      },
+      on_click() {
+        on_click()
+        return true
+      }
+    })
+
+    this.make(Letters, Vec2.make(2, 2), {
+      text
+    })
+
   }
 }
 
@@ -456,60 +515,15 @@ class HelpPage2 extends Play {
     })
 
 
-    let bg_click_here = this.make(RectView, Vec2.make(21, 137), {
-      w: 240, h: 8,
-      color: Color.hex(0xffffff)
-    })
-    bg_click_here.visible_ = false
-
     let self = this
-    this.make(Clickable, Vec2.make(22, 138), {
-      rect: Rect.make(0, 0, 240, 8),
-      on_hover() {
-        bg_click_here.visible_ = true
-        return true
-      },
-      on_hover_end() {
-        bg_click_here.visible_ = false
-        return true
-      },
+    this.make(ClickHiButton, Vec2.make(22, 134), {
+      w: 232,
+      h: 8,
+      text: 'click here to go back.',
       on_click() {
         self.data.on_next()
-        return true
       }
     })
-
-
-    let bg_click_here2 = this.make(RectView, Vec2.make(21 + 70, 151), {
-      w: 200, h: 8,
-      color: Color.hex(0xffffff)
-    })
-    bg_click_here2.visible_ = false
-
-    this.make(Clickable, Vec2.make(21 + 70, 151), {
-      rect: Rect.make(0, 0, 200, 8),
-      on_hover() {
-        bg_click_here2.visible_ = true
-        return true
-      },
-      on_hover_end() {
-        bg_click_here2.visible_ = false
-        return true
-      }
-    })
-
-
-
-    this.make(Letters, Vec2.make(22, 138), {
-      text: 'click here to see how hands are ranked.'
-    })
-
-    this.make(Letters, Vec2.make(22 + 70, 152), {
-      text: 'click anywhere else to close this.'
-    })
-
-
-
   }
 
 }
@@ -561,58 +575,15 @@ class HelpPage1 extends Play {
     })
 
 
-    let bg_click_here = this.make(RectView, Vec2.make(21, 137), {
-      w: 240, h: 8,
-      color: Color.hex(0xffffff)
-    })
-    bg_click_here.visible_ = false
-
     let self = this
-    this.make(Clickable, Vec2.make(22, 138), {
-      rect: Rect.make(0, 0, 240, 8),
-      on_hover() {
-        bg_click_here.visible_ = true
-        return true
-      },
-      on_hover_end() {
-        bg_click_here.visible_ = false
-        return true
-      },
+    this.make(ClickHiButton, Vec2.make(22, 136), {
+      w: 233,
+      h: 8,
+      text: 'click here to see how hands are ranked.',
       on_click() {
         self.data.on_next()
-        return true
       }
     })
-
-
-    let bg_click_here2 = this.make(RectView, Vec2.make(21 + 70, 151), {
-      w: 200, h: 8,
-      color: Color.hex(0xffffff)
-    })
-    bg_click_here2.visible_ = false
-
-    this.make(Clickable, Vec2.make(21 + 70, 151), {
-      rect: Rect.make(0, 0, 200, 8),
-      on_hover() {
-        bg_click_here2.visible_ = true
-        return true
-      },
-      on_hover_end() {
-        bg_click_here2.visible_ = false
-        return true
-      }
-    })
-
-
-
-    this.make(Letters, Vec2.make(22, 138), {
-      text: 'click here to see how hands are ranked.'
-    })
-
-    this.make(Letters, Vec2.make(22 + 70, 152), {
-      text: 'click anywhere else to close this.'
-    })
-
 
   }
 }
@@ -632,6 +603,8 @@ class StackSizePlay extends Play {
 
   me_say!: Tips
   op_say!: Tips
+
+  help!: Help
 
   _init() {
 
@@ -669,7 +642,19 @@ class StackSizePlay extends Play {
 
     this.op_say = this.make(Tips, Vec2.make(220, 30), {})
 
-    this.make(Help, Vec2.zero, {})
+    this.help = this.make(Help, Vec2.zero, {})
+
+
+    let self = this
+    this.make(ClickHiButton, Vec2.zero, {
+
+      w: 40,
+      h: 8,
+      text: 'help',
+      on_click() {
+        self.help.visible_ = !self.help.visible
+      }
+    })
   }
 
 
