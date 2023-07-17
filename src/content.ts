@@ -16,6 +16,11 @@ function load_image(path: string): Promise<HTMLImageElement> {
 }
 
 
+const letters = [
+  'abcdefghijklmnop'.split(''),
+  'qrstuvwxyz'.split(''),
+  '1234567890!$+-.,:'.split('')
+]
 
 class Content {
 
@@ -29,10 +34,41 @@ class Content {
 
     this.sprites = []
 
+
     content_page0_json.sprites.forEach(_sprite => {
       let { name, packs, tags } = _sprite
 
       let origin = Vec2.zero
+
+      if (name === 'font') {
+
+        let animations: Array<Animation> = []
+
+
+        let _ = packs[0]
+
+        letters.forEach((ls, col) => {
+          ls.forEach((letter, row) =>  {
+
+            let frames: Array<Frame> = []
+            let framerect = Rect.make(_.frame.x, _.frame.y, _.frame.w, _.frame.h)
+            let subrect = Rect.make(_.packed.x + 4 + 6 * row, _.packed.y + 4 + 6 * col, 6, 6)
+            let frame = new Frame(Subtexture.make(texture, subrect, framerect), 1000)
+            frames.push(frame)
+
+
+            let anim = new Animation(letter, frames)
+            animations.push(anim)
+          })
+        })
+
+        let sprite = new Sprite(name, origin, animations)
+
+        this.sprites.push(sprite)
+        return
+      }
+
+
 
       let animations: Array<Animation> = []
 

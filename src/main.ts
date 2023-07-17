@@ -1,5 +1,6 @@
 import { App, batch } from './blah'
 import { Game } from './game'
+import Input from './input'
 
 function app(element: HTMLElement) {
 
@@ -25,6 +26,8 @@ function app(element: HTMLElement) {
   if (App.canvas) {
     element.appendChild(App.canvas)
   }
+
+  Input.listen(element)
 }
 
 

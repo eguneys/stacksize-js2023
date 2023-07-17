@@ -61,6 +61,15 @@ export abstract class Play {
     return this.position
   }
 
+  get p_visible(): boolean {
+    if (this.parent) {
+      return this.parent.p_visible && this.visible
+    }
+    return this.visible
+  }
+
+
+
   _add_object(child: Play) {
     this.objects.push(child)
     child.parent = this

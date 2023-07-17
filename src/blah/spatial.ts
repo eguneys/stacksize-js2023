@@ -240,7 +240,6 @@ export class Rect {
   }
  */
 
-/*
   contains_rect(r: Rect) {
     return r.x >= this.x && r.x + r.w < this.x + this.w && r.y >= this.y && r.y + r.h < this.y + this.h
   }
@@ -248,6 +247,7 @@ export class Rect {
   overlaps(r: Rect) {
     return this.x + this.w >= r.x && this.y + this.h >= r.y && this.x < r.x + r.w && this.y < r.y + r.h
   }
+  /*
   overlaps_rect(against: Rect) {
 
     let result = new Rect(0, 0, 0, 0)
@@ -350,7 +350,6 @@ export class Rect {
  */
 
 
-  /*
   static transform = (rect: Rect, matrix: Mat3x2) => {
     return new Rect(
       (rect.x * matrix.m11) + (rect.y * matrix.m21) + matrix.m31,
@@ -358,7 +357,6 @@ export class Rect {
       (rect.w * matrix.m11) + (rect.h * matrix.m21),
       (rect.w * matrix.m12) + (rect.h * matrix.m22))
   }
- */
 
   /*
   static from_points = (from: Vec2, to: Vec2) => {

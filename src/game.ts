@@ -1,6 +1,6 @@
 //import { TextureFilter, TextureSampler } from './blah'
 import { Color } from './blah'
-import { Rect, Vec2 } from './blah'
+import { Rect, Vec2, Mat3x2 } from './blah'
 
 import { Time, App, batch, Batch, Target } from './blah'
 
@@ -8,6 +8,190 @@ import { bg1, link_color, Play, PlayType} from './play'
 import Content from './content'
 
 import { Anim } from './anim'
+import { EventPosition, DragEvent } from './input'
+
+
+type ClickableData = {
+  abs?: true,
+  debug?: true,
+  rect: Rect,
+  on_hover?: () => boolean,
+  on_hover_end?: () => void,
+  on_click_begin?: () => boolean,
+  on_click?: () => boolean,
+  on_drag_begin?: (e: Vec2) => boolean,
+  on_drag_end?: (e: Vec2) => void,
+  on_drag?: (e: Vec2) => boolean,
+  on_drop?: (e: Vec2) => void,
+  on_up?: (e: Vec2, right: boolean) => void,
+  on_wheel?: (d: number) => void
+}
+
+export class Clickable extends Play {
+
+  get data() {
+    return this._data as ClickableData
+  }
+
+  get width() {
+    return this._scaled_rect.w
+  }
+
+  get height() {
+    return this._scaled_rect.h
+  }
+
+  _scaled_rect!: Rect
+
+  get _rect() {
+    let { p_position } = this
+    return this.data.abs ? 
+      Rect.make(p_position.x, p_position.y, this.width, this.height)
+      : this._scaled_rect
+  }
+
+  get rect() {
+    return this._rect
+  }
+
+  _init() {
+
+    this._scaled_rect = this.data.rect
+    let _dragging = false
+    let _hovering = false
+    let self = this
+    this.unbindable_input({
+      on_click_begin(_e: EventPosition, right: boolean) {
+        if (right) {
+          return false
+        }
+        if (!self.p_visible) {
+          return false
+        }
+        let e = _e.mul(Game.v_screen)
+        let point = Rect.make(e.x, e.y, 1, 1)
+        let rect = self.rect
+        if (rect.overlaps(point)) {
+          return self.data.on_click_begin?.() ?? false
+        }
+        return false
+      },
+      on_drag(d: DragEvent, d0?: DragEvent) {
+        if (d._right) {
+          return false
+        }
+        if (!self.p_visible) {
+          return false
+        }
+        if (_dragging) {
+          let m = d.m!.mul(Game.v_screen)
+          return self.data.on_drag?.(m) ?? false
+        }
+
+        if (d.m && (!d0 || !d0.m)) {
+          let e = d.e.mul(Game.v_screen)
+          let point = Rect.make(e.x, e.y, 1, 1)
+          let rect = self.rect
+          if (rect.overlaps(point)) {
+            _dragging = true
+            return self.data.on_drag_begin?.(e) ?? false
+          } else {
+            return false
+          }
+        }
+        return false
+      },
+      on_up(e: Vec2, right: boolean, m?: Vec2) {
+        if (right) {
+          return false
+        }
+        if (!self.p_visible) {
+          return false
+        }
+        let _e = e.mul(Game.v_screen)
+
+        if (_dragging) {
+          _dragging = false
+          self.data.on_drag_end?.(_e)
+        } 
+
+        self.data.on_up?.(e, right)
+
+        if (m) {
+
+          let _m = m.mul(Game.v_screen)
+          let point = Rect.make(_m.x, _m.y, 1, 1)
+          let rect = self.rect
+          if (rect.overlaps(point)) {
+            self.data.on_drop?.(m)
+          }
+        }
+
+
+        return false
+      },
+      on_hover(_e: EventPosition) {
+        if (!self.data.on_hover) {
+          return false
+        }
+        if (!self.p_visible) {
+          return false
+        }
+        let e = _e.mul(Game.v_screen)
+        let point = Rect.make(e.x, e.y, 1, 1)
+        let rect = self.rect
+        if (rect.overlaps(point)) {
+          if (!_hovering) {
+            _hovering = true
+            return self.data.on_hover?.() ?? false
+          }
+        } else {
+          if (_hovering) {
+            _hovering = false
+            self.data.on_hover_end?.()
+          }
+        }
+        return _hovering
+      },
+      on_hover_clear() {
+        if (!self.data.on_hover_end) {
+          return false
+        }
+        if (_hovering) {
+          _hovering = false
+          return self.data.on_hover_end?.()
+        }
+        if (!self.p_visible) {
+          return false
+        }
+        return false
+      },
+      on_click(_e: EventPosition, right: boolean) {
+        if (!self.p_visible) {
+          return false
+        }
+        let e = _e.mul(Game.v_screen)
+        let point = Rect.make(e.x, e.y, 1, 1)
+        let rect = self.rect
+        if (rect.overlaps(point)) {
+          return self.data.on_click?.() ?? false
+        }
+        return false
+      },
+    })
+  }
+
+  _draw() {
+    batch.push_matrix(Mat3x2.create_translation(this.position))
+    //this.g_position = Vec2.transform(Vec2.zero, batch.m_matrix)
+    this._scaled_rect = Rect.transform(this.data.rect, batch.m_matrix)
+    if (this.data.debug) {
+      batch.rect(Rect.make(0, 0, this.width, this.height), Color.hex(0x00ff00))
+    }
+    batch.pop_matrix()
+  }
+
+}
 
 
 
@@ -84,30 +268,113 @@ class Card extends Play {
       }
       this.flash()
     })
+  }
+}
 
+let chips = [5, 4, 3, 2, 1]
+function separateIntoChips(value: number) {
+  const result = []
+
+  for (const chip of chips) {
+    const count = Math.sign(Math.floor(value / chip))
+    result.push(count)
+    value -= count * chip
+  }
+  return result
+}
+
+type ChipData = {
+  value: number
+}
+
+class Chip extends Play {
+
+  get data() {
+    return this._data as ChipData
+  }
+
+  _init() {
+
+    let chip = this.make(Anim, Vec2.zero, {
+      name: 'chip'
+    })
+    chip.play_now(`f${this.data.value}`)
+
+
+    let self = this
+    this.make(Clickable, Vec2.zero, {
+      rect: Rect.make(0, 0, 28, 4),
+      on_hover() {
+        chip.play_now(`o${self.data.value}`)
+        return true
+      },
+      on_hover_end() {
+        chip.play_now(`f${self.data.value}`)
+        return true
+      }
+
+    })
   }
 }
 
 class Chips extends Play {
 
-  one!: Anim
+  chips!: Chip[]
 
   _init() {
-    this.one = this.make(Anim, Vec2.zero, {
-      name: 'chips'
+    this.chips = []
+  }
+
+
+  spawn(nb: number) {
+    this.chips.forEach(_ => _.dispose())
+    this.chips = []
+
+    separateIntoChips(nb).forEach((a, i) => {
+      if (a > 0) {
+        let chip = this.make(Chip, Vec2.zero, {
+          value: chips[i]
+        })
+        this.chips.push(chip)
+      }
     })
-    this.one.origin = Vec2.make(15, 15)
-    this.one.play_now('6')
-    this.one.visible = false
+
+    this.chips.forEach((c, i) => {
+      c.position.y -= i * 6
+    })
   }
 
+}
 
-  spawn(chips: number) {
-    this.one.visible = true
-    this.one.play_now(`${chips}`)
-    this.one.flash()
+class Avatar extends Play {
+  _init() {
+
+    this.make(Anim, Vec2.zero, {
+      name: 'avatar_bg'
+    })
+  }
+}
+
+type LettersData = {
+  text: string
+}
+
+class Letters extends Play {
+
+  get data() {
+    return this._data as LettersData
   }
 
+  _init() {
+    let x = 0
+    this.data.text.split('').forEach(_ => {
+      let l = this.make(Anim, Vec2.make(4 + x, 4), {
+        name: 'font'
+      })
+      l.play_now(_)
+      x+= 6
+    })
+  }
 }
 
 class StackSizePlay extends Play {
@@ -120,9 +387,12 @@ class StackSizePlay extends Play {
   me_bets!: Chips
   op_bets!: Chips
 
+  op_avatar!: Avatar
+  me_avatar!: Avatar
+
   _init() {
 
-    this.make(RectView, Vec2.zero, { w: 320, h: 180, color: Color.hex(0x101088)})
+    this.make(RectView, Vec2.zero, { w: 320, h: 180, color: Color.hex(0x4ab2cd)})
 
     this.me_cards = [
       this.make(Card, Vec2.make(30, 154), {}),
@@ -138,17 +408,23 @@ class StackSizePlay extends Play {
 
 
 
-    this.me_chips = this.make(Chips, Vec2.make(200, 156), {})
-    this.op_chips = this.make(Chips, Vec2.make(280, 56), {})
-    this.me_bets = this.make(Chips, Vec2.make(200, 106), {})
-    this.op_bets = this.make(Chips, Vec2.make(280, 106), {})
+    this.me_chips = this.make(Chips, Vec2.make(120, 156), {})
+    this.op_chips = this.make(Chips, Vec2.make(120, 36), {})
+    //this.me_bets = this.make(Chips, Vec2.make(160, 86), {})
+    //this.op_bets = this.make(Chips, Vec2.make(240, 86), {})
 
+    this.me_avatar = this.make(Avatar, Vec2.make(160, 146), {})
+    this.op_avatar = this.make(Avatar, Vec2.make(160, 10), {})
 
 
     this.deal([cards[0], cards[1]])
 
-    this.me_chips.spawn(12)
-    this.op_chips.spawn(12)
+    this.me_chips.spawn(15)
+    this.op_chips.spawn(15)
+
+    this.make(Letters, Vec2.make(0, 0), {
+      text: '0123456789$:,+-'
+    })
   }
 
 
@@ -188,9 +464,11 @@ export class Game extends Play {
   static width = 320
   static height = 180
 
-  //static v_screen = Vec2.make(Game.width, Game.height)
+  static v_screen = Vec2.make(Game.width, Game.height)
 
   _init() {
+
+    this.position = Vec2.zero
 
     //batch.default_sampler = TextureSampler.make(TextureFilter.Linear)
 

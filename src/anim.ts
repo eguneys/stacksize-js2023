@@ -49,6 +49,14 @@ export class Anim extends Play {
     return this.frame?.duration
   }
 
+  get width() {
+    return this.subtexture?.width ?? 0
+  }
+
+  get height() {
+    return this.subtexture?.height ?? 0
+  }
+
   _loop: boolean = false
   _reverse: boolean = false
   _on_complete?: () => void

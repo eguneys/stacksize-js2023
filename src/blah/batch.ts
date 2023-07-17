@@ -29,6 +29,21 @@ export class Batch {
   m_batches: DrawBatch[] = []
   m_batch_insert = 0
 
+  get m_matrix() {
+    let { ctx } = App.backbuffer
+    let { a, b, c, d, e, f } = ctx.getTransform()
+
+    let matrix = Mat3x2.identity
+
+    matrix.m11 = a
+    matrix.m12 = b
+    matrix.m21 = c
+    matrix.m22 = d
+    matrix.m31 = e
+    matrix.m32 = f
+    return matrix
+  }
+
   pop_matrix() {
     let { ctx } = App.backbuffer
     ctx.restore()
